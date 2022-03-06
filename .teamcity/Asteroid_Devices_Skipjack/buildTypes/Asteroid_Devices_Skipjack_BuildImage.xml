@@ -6,7 +6,9 @@
     <parameters />
     <build-runners />
     <vcs-settings>
-      <vcs-entry-ref root-id="Asteroid_Devices_Skipjack_HttpsGithubComAsteroidOSMetaSkipjackHybris" />
+      <vcs-entry-ref root-id="Asteroid_Devices_Skipjack_HttpsGithubComAsteroidOSMetaSkipjackHybris">
+        <checkout-rule rule="+:.=&gt;src/meta-%system.MACHINE%-hybris" />
+      </vcs-entry-ref>
     </vcs-settings>
     <requirements />
     <build-triggers />
