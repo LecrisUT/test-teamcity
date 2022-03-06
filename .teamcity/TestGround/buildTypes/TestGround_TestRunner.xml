@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="d864c3d1-7df4-4892-9091-ee002948b4f0" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Test Runner</name>
+  <description />
+  <settings>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_14" name="" type="matrix-build-runner">
+        <parameters>
+          <param name="build.type.id" value="bt18" />
+          <param name="matrix.parameters"><![CDATA[system.testName=NameA,NameB,NameC
+system.testValue=A,1]]></param>
+          <param name="matrix.parameters.const" value="null" />
+          <param name="teamcity.server.password" value="test" />
+          <param name="teamcity.server.url" value="%teamcity.serverUrl%" />
+          <param name="teamcity.server.username" value="temptest" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="wait.builds.finish" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings />
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+

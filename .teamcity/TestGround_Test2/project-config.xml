@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="TestGround" uuid="c0aac31a-6dd9-4286-a4b9-4f21a5c024eb" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>test2</name>
+  <parameters />
+  <cleanup />
+</project>
+
