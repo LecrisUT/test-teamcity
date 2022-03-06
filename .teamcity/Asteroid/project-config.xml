@@ -10,22 +10,6 @@
     <param name="system.sstate.server.user" value="asteroidos" spec="text display='normal' description='Username used to upload sstate-cache' readOnly='true' label='SState server user' validationMode='any'" />
   </parameters>
   <project-extensions>
-    <extension id="PROJECT_EXT_4" type="storage_settings">
-      <parameters>
-        <param name="aws.access.key.id" value="2OTM3POPAA4V0SOA0142" />
-        <param name="aws.credentials.type" value="aws.access.keys" />
-        <param name="aws.environment" value="custom" />
-        <param name="aws.external.id" value="TeamCity-server-50525bd7-bdfc-430d-9d9d-878f9025d1f6" />
-        <param name="aws.region.name" value="default" />
-        <param name="aws.service.endpoint" value="https://ap-south-1.linodeobjects.com" />
-        <param name="secure:aws.secret.access.key" value="credentialsJSON:6a842593-0272-4d49-9bb1-b1328e878542" />
-        <param name="storage.name" value="Linode" />
-        <param name="storage.s3.bucket.name" value="asteroidos" />
-        <param name="storage.s3.bucket.prefix" value="asteroidos" />
-        <param name="storage.s3.upload.presignedUrl.enabled" value="true" />
-        <param name="storage.type" value="S3_storage" />
-      </parameters>
-    </extension>
     <extension id="PROJECT_EXT_6" type="active_storage">
       <parameters>
         <param name="active.storage.feature.id" value="DefaultStorage" />
