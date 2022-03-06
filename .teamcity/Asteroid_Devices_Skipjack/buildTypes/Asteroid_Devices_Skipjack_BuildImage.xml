@@ -5,7 +5,9 @@
   <settings ref="Asteroid_Devices_BuildImage">
     <parameters />
     <build-runners />
-    <vcs-settings />
+    <vcs-settings>
+      <vcs-entry-ref root-id="Asteroid_Devices_Skipjack_HttpsGithubComAsteroidOSMetaSkipjackHybris" />
+    </vcs-settings>
     <requirements />
     <build-triggers />
     <cleanup />
