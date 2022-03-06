@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Asteroid" uuid="efc59c22-2344-48d3-9eb5-d3c033f4a8a8" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Devices</name>
+  <description>Device specific projects</description>
+  <parameters>
+    <param name="system.MACHINE" value="%system.teamcity.projectName%" />
+  </parameters>
+  <project-extensions>
+    <extension id="KEEP_RULE_1" type="keepRules">
+      <parameters>
+        <param name="keepData.1.type" value="statistics" />
+        <param name="limit.type" value="all" />
+        <param name="partitions.1.type" value="perBranch" />
+        <param name="preserveArtifacts" value="true" />
+        <param name="ruleDisabled" value="true" />
+      </parameters>
+    </extension>
+  </project-extensions>
+  <cleanup />
+</project>
+

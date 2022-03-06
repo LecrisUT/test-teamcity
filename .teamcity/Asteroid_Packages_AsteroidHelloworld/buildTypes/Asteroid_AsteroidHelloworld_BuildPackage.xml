@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="34f61ecf-5fcb-47af-a9ac-d0c09769739b" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Build Package</name>
+  <description />
+  <settings ref="Asteroid_Packages_BuildPackage">
+    <parameters />
+    <build-runners />
+    <vcs-settings>
+      <vcs-entry-ref root-id="Asteroid_AsteroidHelloworld_HttpsGithubComAsteroidOSAsteroidHelloworldRefsHeadsMaster">
+        <checkout-rule rule="+:.=&gt;src/hello-world" />
+      </vcs-entry-ref>
+    </vcs-settings>
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+
