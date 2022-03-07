@@ -7,7 +7,6 @@
   <param name="branch" value="refs/heads/master" />
   <param name="ignoreKnownHosts" value="true" />
   <param name="submoduleCheckout" value="CHECKOUT" />
-  <param name="teamcity:branchSpec" value="refs/heads/*" />
   <param name="url" value="https://github.com/AsteroidOS/asteroid" />
   <param name="useAlternates" value="AUTO" />
   <param name="usernameStyle" value="USERID" />
