@@ -43,7 +43,7 @@ BBLAYERS = " \
   ${SRCDIR}/meta-smartphone/meta-android \
   ${SRCDIR}/meta-openembedded/meta-python \
   ${SRCDIR}/meta-openembedded/meta-filesystems \
-  ${SRCDIR}/meta-smartwatch \
+  ${SRCDIR}/meta-smartwatch/meta-%system.MACHINE% \
   "' > build/conf/bblayers.conf
 
 # Try to initialize OE environment
