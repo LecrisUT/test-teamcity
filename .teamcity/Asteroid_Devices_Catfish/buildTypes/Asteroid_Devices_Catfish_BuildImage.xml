@@ -4,24 +4,7 @@
   <description />
   <settings ref="Asteroid_Devices_BuildImage">
     <parameters />
-    <build-runners order="RUNNER_2, RUNNER_3, RUNNER_5, RUNNER_4">
-      <runner id="RUNNER_16" name="Upload sstate-cache" type="ssh-deploy-runner">
-        <parameters>
-          <param name="jetbrains.buildServer.deployer.sourcePath"><![CDATA[build/sstate-cache/fedora-35 => other-sstate/sstate-cache/fedora-35
-build/sstate-cache/**/*:*:*:*:*::* => other-sstate/sstate-cache
-build/sstate-cache/**/*:*:*:*:*:%system.MACHINE%:* => %system.MACHINE%/sstate-cache
-build/sstate-cache/**/*:*:*:*:*:%system.architecture%:* => %system.architecture%/sstate-cache
-build/sstate-cache/**/*:*:*:*:*:allarch:* => allarch/sstate-cache
-build/sstate-cache => sstate-cache]]></param>
-          <param name="jetbrains.buildServer.deployer.ssh.transport" value="jetbrains.buildServer.deployer.ssh.transport.scp" />
-          <param name="jetbrains.buildServer.deployer.targetUrl" value="%system.sstate.server.upload_address%:/var/www/asteroidos" />
-          <param name="jetbrains.buildServer.deployer.username" value="%system.sstate.server.user%" />
-          <param name="jetbrains.buildServer.sshexec.authMethod" value="UPLOADED_KEY" />
-          <param name="teamcity.step.mode" value="default" />
-          <param name="teamcitySshKey" value="SState server key" />
-        </parameters>
-      </runner>
-    </build-runners>
+    <build-runners order="RUNNER_2, RUNNER_3, RUNNER_5, RUNNER_4" />
     <vcs-settings />
     <requirements />
     <build-triggers />
