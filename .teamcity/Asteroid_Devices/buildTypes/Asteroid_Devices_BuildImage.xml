@@ -101,7 +101,7 @@ build/sstate-cache => sstate-cache]]></param>
         <checkout-rule rule="+:.=&gt;src/meta-openembedded" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_MetaDevice">
-        <checkout-rule rule="+:.=&gt;src/meta-%system.MACHINE%-hybris" />
+        <checkout-rule rule="+:.=&gt;src/meta-smartwatch" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComMetaQt5metaQt5">
         <checkout-rule rule="+:.=&gt;src/meta-qt5" />
