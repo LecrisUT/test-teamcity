@@ -21,41 +21,6 @@ build/sstate-cache => sstate-cache]]></param>
           <param name="teamcitySshKey" value="SState server key" />
         </parameters>
       </runner>
-      <runner id="RUNNER_2" name="Prepare config files" type="simpleRunner">
-        <parameters>
-          <param name="script.content"><![CDATA[mkdir -p build/conf
-echo 'DISTRO = "asteroid"
-MACHINE = "%system.MACHINE%"
-PACKAGE_CLASSES = "package_ipk"
-SSTATE_MIRRORS ?= " \
-    file://.* %system.sstate.server.address%/%system.MACHINE%/sstate-cache/PATH;downloadfilename=PATH \n \
-    file://.* %system.sstate.server.address%/%system.architecture%/sstate-cache/PATH;downloadfilename=PATH \n \
-    file://.* %system.sstate.server.address%/allarch/sstate-cache/PATH;downloadfilename=PATH \n \
-    file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \n \
-    "' >> build/conf/local.conf
-echo 'BBPATH = "${TOPDIR}"
-SRCDIR = "${@os.path.abspath(os.path.join("${TOPDIR}", "../src/"))}"
-
-BBLAYERS = " \
-  ${SRCDIR}/meta-qt5 \
-  ${SRCDIR}/oe-core/meta \
-  ${SRCDIR}/meta-asteroid \
-  ${SRCDIR}/meta-openembedded/meta-oe \
-  ${SRCDIR}/meta-openembedded/meta-multimedia \
-  ${SRCDIR}/meta-openembedded/meta-gnome \
-  ${SRCDIR}/meta-openembedded/meta-networking \
-  ${SRCDIR}/meta-smartphone/meta-android \
-  ${SRCDIR}/meta-openembedded/meta-python \
-  ${SRCDIR}/meta-openembedded/meta-filesystems \
-  ${SRCDIR}/meta-smarwatch \
-  "' > build/conf/bblayers.conf
-
-# Try to initialize OE environment
-source ./src/oe-core/oe-init-build-env]]></param>
-          <param name="teamcity.step.mode" value="default" />
-          <param name="use.custom.script" value="true" />
-        </parameters>
-      </runner>
     </build-runners>
     <vcs-settings />
     <requirements />
