@@ -159,6 +159,11 @@ build/sstate-cache => sstate-cache]]></param>
           <param name="vcsRootId" value="Asteroid_Devices_MetaSmatwtach" />
         </parameters>
       </extension>
+      <extension id="BUILD_EXT_2" type="ssh-agent-build-feature">
+        <parameters>
+          <param name="teamcitySshKey" value="SState server key" />
+        </parameters>
+      </extension>
     </build-extensions>
     <cleanup />
   </settings>
