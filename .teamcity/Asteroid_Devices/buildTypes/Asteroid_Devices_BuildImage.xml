@@ -101,7 +101,7 @@ build/sstate-cache => sstate-cache]]></param>
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedMetaOpenembeddedGit">
         <checkout-rule rule="+:.=&gt;src/meta-openembedded" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_MetaDevice">
+      <vcs-entry-ref root-id="Asteroid_Devices_MetaSmatwtach">
         <checkout-rule rule="+:.=&gt;src/meta-smartwatch" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComMetaQt5metaQt5">
@@ -121,7 +121,7 @@ build/sstate-cache => sstate-cache]]></param>
           <param name="branchFilter" value="+:*" />
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:root=Asteroid_MetaDevice:**" />
+          <param name="triggerRules" value="+:root=Asteroid_Devices_MetaSmatwtach:**" />
         </parameters>
       </build-trigger>
       <build-trigger id="TRIGGER_5" type="schedulingTrigger">

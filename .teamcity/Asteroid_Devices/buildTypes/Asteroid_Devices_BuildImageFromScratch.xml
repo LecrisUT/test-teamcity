@@ -109,7 +109,7 @@ build/sstate-cache => sstate-cache]]></param>
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedMetaOpenembeddedGit">
         <checkout-rule rule="+:.=&gt;src/meta-openembedded" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_MetaDevice">
+      <vcs-entry-ref root-id="Asteroid_Devices_MetaSmatwtach">
         <checkout-rule rule="+:.=&gt;src/meta-%system.teamcity.projectName%-hybris" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComMetaQt5metaQt5">
