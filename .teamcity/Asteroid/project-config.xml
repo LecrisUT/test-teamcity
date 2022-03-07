@@ -20,7 +20,7 @@
         <param name="buildSettings" value="PREFER_VCS" />
         <param name="credentialsStorageType" value="credentialsJSON" />
         <param name="enabled" value="true" />
-        <param name="rootId" value="Asteroid_TestTeamcity" />
+        <param name="rootId" value="Asteroid_TempSettingsRepository" />
         <param name="showChanges" value="true" />
       </parameters>
     </extension>
