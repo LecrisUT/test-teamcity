@@ -20,7 +20,11 @@
           <param name="script.content"><![CDATA[mkdir -p build/conf
 echo 'DISTRO = "asteroid"
 MACHINE = "%system.MACHINE%"
-PACKAGE_CLASSES = "package_ipk"' >> build/conf/local.conf
+PACKAGE_CLASSES = "package_ipk"
+SSTATE_MIRRORS ?= " \
+    file://.* https://asteroidos.lecris.dev//other-sstate/sstate-cache/PATH;downloadfilename=PATH \n \
+    "' >> build/conf/local.conf
+
 echo 'BBPATH = "${TOPDIR}"
 SRCDIR = "${@os.path.abspath(os.path.join("${TOPDIR}", "../src/"))}"
 
