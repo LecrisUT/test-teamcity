@@ -3,7 +3,9 @@
   <name>Build Package</name>
   <description />
   <settings>
-    <parameters />
+    <parameters>
+      <param name="PackageVCS_URL" value="https://github.com/AsteroidOS/asteroid-btsyncd" />
+    </parameters>
     <build-runners />
     <vcs-settings />
     <requirements />
