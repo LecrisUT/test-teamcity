@@ -98,6 +98,15 @@ bitbake \
           <param name="triggerRules" value="+:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid;comment=^\[%system.recipeName%\][:]:**" />
         </parameters>
       </build-trigger>
+      <build-trigger id="TRIGGER_16" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter"><![CDATA[+:<default>
++:pull/*]]></param>
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+          <param name="triggerRules" value="+:root=Asteroid_Packages_AsteroidCore_PackageSource:**" />
+        </parameters>
+      </build-trigger>
     </build-triggers>
     <build-extensions>
       <extension id="BUILD_EXT_9" type="commit-status-publisher">
