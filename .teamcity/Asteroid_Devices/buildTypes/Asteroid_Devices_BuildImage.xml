@@ -91,6 +91,28 @@ build/sstate-cache => sstate-cache]]></param>
           <param name="teamcitySshKey" value="SState server key" />
         </parameters>
       </runner>
+      <runner id="RUNNER_21" name="Upload sstate-cache" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[alias rsync2 = "rsync -a --prune-empty-dirs --remove-source-files \ 
+    --checksum --progress"
+alias rsync3 = "rsync2 \
+    --include '*/'  --exclude '*'"
+ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:/var/www/asteroidos"
+
+
+rsync2 build/sstae-cache/fedora-35 ${ServerAddr}/other-sstate/sstate-cache
+rsync3 --include '*::*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:%system.MACHINE%:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:%system.architecture%:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:allarch:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
     </build-runners>
     <vcs-settings>
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedOpenembeddedCoreGit">
