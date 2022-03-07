@@ -14,7 +14,6 @@
       <setting-ref ref="BUILD_EXT_2" />
       <setting-ref ref="RUNNER_7" />
       <setting-ref ref="TRIGGER_15" />
-      <setting-ref ref="TRIGGER_4" />
       <setting-ref ref="TRIGGER_5" />
     </disabled-settings>
     <parameters />
@@ -119,16 +118,6 @@ build/sstate-cache => sstate-cache]]></param>
     </vcs-settings>
     <requirements />
     <build-triggers>
-      <build-trigger id="TRIGGER_4" type="vcsTrigger">
-        <parameters>
-          <param name="branchFilter"><![CDATA[+:<default>
-+:pull/*]]></param>
-          <param name="enableQueueOptimization" value="true" />
-          <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach:/meta-%system.MACHINE%/**
-+:root=Asteroid_Devices_MetaSmatwtach;comment=%system.MACHINE%: *:**]]></param>
-        </parameters>
-      </build-trigger>
       <build-trigger id="TRIGGER_5" type="schedulingTrigger">
         <parameters>
           <param name="branchFilter" value="+:*" />
