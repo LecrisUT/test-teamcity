@@ -5,9 +5,7 @@
   <settings>
     <parameters />
     <build-runners />
-    <vcs-settings>
-      <vcs-entry-ref root-id="Asteroid_Packages_AsteroidCore_AsteroidCalendar_HttpsGithubComAsteroidOSAsteroidCalendarGitRefsHeadsMaster" />
-    </vcs-settings>
+    <vcs-settings />
     <requirements />
     <build-triggers />
     <cleanup />
