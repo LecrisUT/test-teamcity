@@ -7,7 +7,7 @@
   <param name="branch" value="master" />
   <param name="ignoreKnownHosts" value="true" />
   <param name="submoduleCheckout" value="CHECKOUT" />
-  <param name="url" value="https://github.com/AsteroidOS/meta-%system.MACHINE%-hybris" />
+  <param name="url" value="https://github.com/AsteroidOS/meta-smartwatch" />
   <param name="useAlternates" value="AUTO" />
   <param name="usernameStyle" value="USERID" />
 </vcs-root>
