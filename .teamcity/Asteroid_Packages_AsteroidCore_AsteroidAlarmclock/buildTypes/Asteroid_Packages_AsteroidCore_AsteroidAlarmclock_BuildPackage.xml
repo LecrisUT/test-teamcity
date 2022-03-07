@@ -3,7 +3,9 @@
   <name>Build Package</name>
   <description />
   <settings>
-    <parameters />
+    <parameters>
+      <param name="PackageVCS_URL" value="https://github.com/AsteroidOS/asteroid-alarmclock.git" />
+    </parameters>
     <build-runners />
     <vcs-settings>
       <vcs-entry-ref root-id="Asteroid_Packages_AsteroidCore_AsteroidAlarmclock_HttpsGithubComAsteroidOSAsteroidAlarmclockGitRefsHeadsMaster">
