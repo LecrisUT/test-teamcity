@@ -4,7 +4,7 @@
   <description />
   <settings ref="Asteroid_Devices_BuildImage">
     <parameters />
-    <build-runners order="RUNNER_2, RUNNER_3, RUNNER_5, RUNNER_4" />
+    <build-runners />
     <vcs-settings />
     <requirements />
     <build-triggers />
