@@ -86,6 +86,18 @@ bitbake \
         </parameters>
       </build-trigger>
     </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_9" type="commit-status-publisher">
+        <parameters>
+          <param name="github_authentication_type" value="token" />
+          <param name="github_host" value="https://api.github.com" />
+          <param name="github_oauth_user" value="LecrisUT" />
+          <param name="publisherId" value="githubStatusPublisher" />
+          <param name="secure:github_access_token" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
+          <param name="vcsRootId" value="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid" />
+        </parameters>
+      </extension>
+    </build-extensions>
     <cleanup />
   </settings>
 </template>
