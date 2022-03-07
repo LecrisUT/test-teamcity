@@ -12,6 +12,7 @@
     </options>
     <disabled-settings>
       <setting-ref ref="RUNNER_7" />
+      <setting-ref ref="TRIGGER_5" />
     </disabled-settings>
     <parameters />
     <build-runners>
