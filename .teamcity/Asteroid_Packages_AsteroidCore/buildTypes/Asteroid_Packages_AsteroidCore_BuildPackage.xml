@@ -10,7 +10,6 @@
     </options>
     <parameters>
       <param name="system.packageVCS.URL" value="https://github.com/AsteroidOS/%system.teamcity.projectName%" spec="text display='normal' description='Git repository managing the package' label='Package repository' validationMode='not_empty'" />
-      <param name="system.packageVCS.defaultBranch" value="refs/heads/master" spec="text display='normal' description='default branch of the repository' label='Default branch' validationMode='not_empty'" />
     </parameters>
     <build-runners>
       <runner id="RUNNER_2" name="Prepare config files" type="simpleRunner">
