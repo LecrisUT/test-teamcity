@@ -10,16 +10,7 @@
     <build-runners order="RUNNER_2, RUNNER_3, RUNNER_5, RUNNER_15, RUNNER_4" />
     <vcs-settings />
     <requirements />
-    <build-triggers>
-      <build-trigger id="TRIGGER_6" type="vcsTrigger">
-        <parameters>
-          <param name="enableQueueOptimization" value="true" />
-          <param name="quietPeriod" value="300" />
-          <param name="quietPeriodMode" value="USE_CUSTOM" />
-          <param name="triggerRules" value="+:root=Asteroid_Devices_MetaSmatwtach;comment=\[Rebuild:%system.MACHINE%\]:**" />
-        </parameters>
-      </build-trigger>
-    </build-triggers>
+    <build-triggers />
     <cleanup />
   </settings>
 </build-type>
