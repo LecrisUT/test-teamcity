@@ -94,7 +94,7 @@ bitbake \
           <param name="branchFilter" value="+:*" />
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid;comment=^\[%system.recipeLayer%\][:]:**" />
+          <param name="triggerRules" value="+:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid;comment=^\[%system.recipeName%\][:]:**" />
         </parameters>
       </build-trigger>
     </build-triggers>
