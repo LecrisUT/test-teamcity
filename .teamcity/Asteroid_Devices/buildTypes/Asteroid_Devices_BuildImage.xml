@@ -167,7 +167,8 @@ build/sstate-cache => sstate-cache]]></param>
 +:pull/*]]></param>
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:root=Asteroid_Devices_MetaSmatwtach;comment=^\[(?:[^\]\n]*)(%system.MACHINE%)(?:[^\]\n]*)\][:]:**" />
+          <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach:/meta-%system.MACHINE%/**
++:root=Asteroid_Devices_MetaSmatwtach;comment=^\[(?:[^\]\n]*)(%system.MACHINE%)(?:[^\]\n]*)\][:]:**]]></param>
         </parameters>
       </build-trigger>
     </build-triggers>
