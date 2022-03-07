@@ -95,7 +95,8 @@ bitbake \
 +:pull/*]]></param>
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid;comment=^\[%system.recipeName%\][:]:**" />
+          <param name="triggerRules"><![CDATA[+:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid;comment=^\[%system.recipeName%\][:]:**
++:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid:/recipes-asteroid/%system.recipeName%/*]]></param>
         </parameters>
       </build-trigger>
       <build-trigger id="TRIGGER_16" type="vcsTrigger">
