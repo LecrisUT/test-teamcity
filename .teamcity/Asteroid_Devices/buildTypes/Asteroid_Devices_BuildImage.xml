@@ -153,7 +153,8 @@ build/sstate-cache => sstate-cache]]></param>
       </build-trigger>
       <build-trigger id="TRIGGER_14" type="vcsTrigger">
         <parameters>
-          <param name="branchFilter" value="+:pull/*" />
+          <param name="branchFilter"><![CDATA[+:<default>
++:pull/*]]></param>
           <param name="quietPeriodMode" value="DO_NOT_USE" />
           <param name="triggerRules" value="+:root=Asteroid_Devices_MetaSmatwtach;comment=^(?:[^:\n]*)(%system.MACHINE%)(?:[^:\n]*)[:]:**" />
         </parameters>
