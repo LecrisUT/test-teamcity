@@ -8,9 +8,7 @@
       <option name="cleanBuild" value="true" />
       <option name="maximumNumberOfBuilds" value="1" />
     </options>
-    <parameters>
-      <param name="Package_VCS_URL" value="https://github.com/AsteroidOS/%system.teamcity.projectName%" spec="text display='normal' description='Repository managing the current package' label='Git repository' validationMode='not_empty'" />
-    </parameters>
+    <parameters />
     <build-runners>
       <runner id="RUNNER_2" name="Prepare config files" type="simpleRunner">
         <parameters>
