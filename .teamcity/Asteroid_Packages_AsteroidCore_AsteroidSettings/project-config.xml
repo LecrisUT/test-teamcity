@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Asteroid_Packages_AsteroidCore" uuid="cdb1174a-210a-4900-9e92-54a798199542" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Asteroid Settings</name>
+  <parameters />
+  <cleanup />
+</project>
+
