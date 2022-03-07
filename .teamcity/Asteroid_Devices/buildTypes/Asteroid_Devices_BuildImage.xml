@@ -158,6 +158,14 @@ build/sstate-cache => sstate-cache]]></param>
           <param name="triggerRules" value="+:root=Asteroid_Devices_MetaSmatwtach;comment=^(?:[^:\n]*)(%system.MACHINE%)(?:[^:\n]*)[:]:**" />
         </parameters>
       </build-trigger>
+      <build-trigger id="TRIGGER_15" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter" value="+:pull/*" />
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+          <param name="triggerRules" value="+:root=Asteroid_Devices_MetaSmatwtach;comment=^\[(?:[^\]\n]*)(%system.MACHINE%)(?:[^\]\n]*)\][:]:**" />
+        </parameters>
+      </build-trigger>
     </build-triggers>
     <build-extensions>
       <extension id="BUILD_EXT_1" type="pullRequests">
