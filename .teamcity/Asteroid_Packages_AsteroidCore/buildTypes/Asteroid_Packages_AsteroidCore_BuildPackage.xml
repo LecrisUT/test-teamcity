@@ -17,8 +17,14 @@
         <parameters>
           <param name="script.content"><![CDATA[mkdir -p build/conf
 echo 'DISTRO = "asteroid"
+MACHINE = "%system.MACHINE%"
 PACKAGE_CLASSES = "package_ipk"
-SSTATE_MIRRORS ?= "file://.* %system.sstate.server.address%/%env.MACHINE%/sstate-cache/PATH;downloadfilename=PATH"' >> build/conf/local.conf
+SSTATE_MIRRORS ?= " \
+    file://.* %system.sstate.server.address%/%system.MACHINE%/sstate-cache/PATH;downloadfilename=PATH \n \
+    file://.* %system.sstate.server.address%/%system.architecture%/sstate-cache/PATH;downloadfilename=PATH \n \
+    file://.* %system.sstate.server.address%/allarch/sstate-cache/PATH;downloadfilename=PATH \n \
+    file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \n \
+    "' >> build/conf/local.conf
 echo 'BBPATH = "${TOPDIR}"
 SRCDIR = "${@os.path.abspath(os.path.join("${TOPDIR}", "../src/"))}"
 
@@ -36,7 +42,7 @@ BBLAYERS = " \
 
 # Add the relevant hybris for real machine dependence
 if [ $MACHINE != "qemux86" ]; then
-  echo '  ${SRCDIR}/meta-%env.MACHINE%-hybris \ ' >> build/conf/bblayers.conf
+  echo '  ${SRCDIR}/meta-smartwatch/meta-%system.MACHINE% \ ' >> build/conf/bblayers.conf
 fi
 
 echo '  "' >> build/conf/bblayers.conf
