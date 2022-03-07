@@ -155,7 +155,7 @@ build/sstate-cache => sstate-cache]]></param>
         <parameters>
           <param name="branchFilter" value="+:pull/*" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:root=Asteroid_Devices_MetaSmatwtach;comment=%system.MACHINE%:**" />
+          <param name="triggerRules" value="+:root=Asteroid_Devices_MetaSmatwtach;comment=^(?:[^:\n]*)(%system.MACHINE%)(?:[^:\n]*)[:]:**" />
         </parameters>
       </build-trigger>
     </build-triggers>
