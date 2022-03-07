@@ -3,6 +3,9 @@
   <name>Rebuild All Devices</name>
   <description>Rebuild all devices from scratch and upload a new cache seed</description>
   <settings>
+    <disabled-settings>
+      <setting-ref ref="TRIGGER_9" />
+    </disabled-settings>
     <parameters />
     <build-runners />
     <vcs-settings>
