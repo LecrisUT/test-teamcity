@@ -129,7 +129,7 @@ build/sstate-cache => sstate-cache]]></param>
           <param name="branchFilter" value="+:*" />
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:comment=(\[TC-Rebuild\]|\[TC-Rebuild:%system.MACHINE%\]):**" />
+          <param name="triggerRules" value="+:comment=\[Rebuild:%system.MACHINE%\]:**" />
         </parameters>
       </build-trigger>
       <build-trigger id="TRIGGER_7" type="schedulingTrigger">
