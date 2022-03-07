@@ -3,7 +3,9 @@
   <name>Build</name>
   <description />
   <settings>
-    <parameters />
+    <parameters>
+      <param name="PackageVCS_URL" value="https://github.com/AsteroidOS/asteroid-calendar.git" />
+    </parameters>
     <build-runners />
     <vcs-settings />
     <requirements />
