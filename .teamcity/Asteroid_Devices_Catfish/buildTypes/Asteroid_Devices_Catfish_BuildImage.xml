@@ -25,14 +25,6 @@ build/sstate-cache => sstate-cache]]></param>
     <vcs-settings />
     <requirements />
     <build-triggers>
-      <build-trigger id="TRIGGER_6" type="vcsTrigger">
-        <parameters>
-          <param name="branchFilter" value="+:*" />
-          <param name="enableQueueOptimization" value="true" />
-          <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:comment=(\[TC-Rebuild\]|\[TC-Rebuild:%env.MACHINE%\]):**" />
-        </parameters>
-      </build-trigger>
       <build-trigger id="TRIGGER_7" type="schedulingTrigger">
         <parameters>
           <param name="branchFilter" value="+:*" />
