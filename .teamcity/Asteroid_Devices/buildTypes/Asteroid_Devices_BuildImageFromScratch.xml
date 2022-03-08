@@ -166,6 +166,13 @@ rsync3 --include '*:allarch:*' \
         </parameters>
       </build-trigger>
     </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_6" type="ssh-agent-build-feature">
+        <parameters>
+          <param name="teamcitySshKey" value="Sstate Server Key" />
+        </parameters>
+      </extension>
+    </build-extensions>
     <cleanup />
   </settings>
 </template>
