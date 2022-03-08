@@ -138,7 +138,7 @@ bitbake \
           <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
           <param name="providerType" value="github" />
           <param name="secure:accessToken" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
-          <param name="vcsRootId" value="Asteroid_Packages_AsteroidApps_PackageSource" />
+          <param name="vcsRootId" value="Asteroid_MetaAsteroidApps" />
         </parameters>
       </extension>
       <extension id="BUILD_EXT_11" type="pullRequests">
