@@ -6,6 +6,7 @@
     <param name="system.MACHINE" value="qemux86" spec="text display='normal' description='Device for which to build' label='Machine' validationMode='not_empty'" />
     <param name="system.architecture" value="armv7vehf-neon" spec="select description='CPU architecture for which to build' label='Architecture' data_1='armv7vehf-neon' label_1='ARMv7' display='normal'" />
     <param name="system.sstate.server.address" value="https://sstate.asteroidos.org" spec="text display='normal' description='Public address serving sstate-cache' readOnly='true' label='SState server public address' validationMode='not_empty'" />
+    <param name="system.sstate.server.location" value="/var/www/asteroidos" spec="text display='normal' description='Path location of the sstate-cache' readOnly='true' label='Sstate server location' validationMode='any'" />
     <param name="system.sstate.server.upload_address" value="127.0.0.1" spec="text display='normal' description='Backend adress to upload the sstate-cache' readOnly='true' label='SState server backend address' validationMode='not_empty'" />
     <param name="system.sstate.server.user" value="asteroidos" spec="text display='normal' description='Username used to upload sstate-cache' readOnly='true' label='SState server user' validationMode='any'" />
   </parameters>
@@ -17,7 +18,7 @@
         <param name="displayName" value="GitHub.com" />
         <param name="gitHubUrl" value="https://github.com/" />
         <param name="providerType" value="GitHub" />
-        <param name="secure:clientSecret" value="credentialsJSON:8c33c7e7-1157-421d-98fd-a5ca0eb50950" />
+        <param name="secure:clientSecret" value="credentialsJSON:a69addcf-99a9-4b09-81bc-8fb85516b239" />
       </parameters>
     </extension>
     <extension id="PROJECT_EXT_6" type="active_storage">

@@ -7,7 +7,7 @@
   <param name="branch" value="refs/heads/asteroid.org" />
   <param name="ignoreKnownHosts" value="true" />
   <param name="oauthProviderId" value="PROJECT_EXT_3" />
-  <param name="secure:password" value="credentialsJSON:67529259-6271-497f-ba64-90fe0f49ba47" />
+  <param name="secure:password" value="credentialsJSON:60a0fd1c-7f14-47c6-97f6-629dcb09d07a" />
   <param name="submoduleCheckout" value="CHECKOUT" />
   <param name="tokenType" value="undefined" />
   <param name="url" value="https://github.com/LecrisUT/test-teamcity.git" />
