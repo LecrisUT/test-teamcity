@@ -80,7 +80,7 @@ bitbake \
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComShrDistributionMetaSmartphone">
         <checkout-rule rule="+:.=&gt;src/meta-smartphone" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid">
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
         <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_Packages_AsteroidApps_PackageSource">
@@ -96,7 +96,7 @@ bitbake \
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
           <param name="triggerRules"><![CDATA[+:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid;comment=^\[%system.recipeName%\][:]:**
-+:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid:/recipes-asteroid/%system.recipeName%/**]]></param>
++:root=Asteroid_MetaAsteroid:/recipes-asteroid/%system.recipeName%/**]]></param>
         </parameters>
       </build-trigger>
       <build-trigger id="TRIGGER_16" type="vcsTrigger">
@@ -117,7 +117,7 @@ bitbake \
           <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
           <param name="secure:github_access_token" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
-          <param name="vcsRootId" value="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid" />
+          <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
         </parameters>
       </extension>
       <extension id="BUILD_EXT_10" type="pullRequests">

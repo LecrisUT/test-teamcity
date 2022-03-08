@@ -6,7 +6,7 @@
     <parameters />
     <build-runners />
     <vcs-settings>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid" />
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroid" />
     </vcs-settings>
     <requirements />
     <build-triggers />

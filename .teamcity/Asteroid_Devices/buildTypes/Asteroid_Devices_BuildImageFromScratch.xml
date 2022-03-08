@@ -123,7 +123,7 @@ build/sstate-cache => sstate-cache]]></param>
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComShrDistributionMetaSmartphone">
         <checkout-rule rule="+:.=&gt;src/meta-smartphone" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid">
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
         <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
       </vcs-entry-ref>
     </vcs-settings>

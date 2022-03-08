@@ -33,7 +33,7 @@ bitbake-selftest]]></param>
       <vcs-entry-ref root-id="Asteroid_Bitbake">
         <checkout-rule rule="+:.=&gt;src/oe-core/bitbake" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid">
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
         <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
       </vcs-entry-ref>
     </vcs-settings>

@@ -134,7 +134,7 @@ rsync3 --include '*:allarch:*' \
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComShrDistributionMetaSmartphone">
         <checkout-rule rule="+:.=&gt;src/meta-smartphone" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid">
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
         <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
       </vcs-entry-ref>
     </vcs-settings>
@@ -180,8 +180,8 @@ rsync3 --include '*:allarch:*' \
           <param name="quietPeriodMode" value="DO_NOT_USE" />
           <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach;comment=^(?!\[NoBuild\]:).+:/meta-%system.MACHINE%/**
 +:root=Asteroid_Devices_MetaSmatwtach;comment=^\[(?:[^\]\n]*)(%system.MACHINE%)(?:[^\]\n]*)\][:]:**
-+:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid:**
--:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid:/recipes-asteroid/**]]></param>
++:root=Asteroid_MetaAsteroid:**
+-:root=Asteroid_MetaAsteroid:/recipes-asteroid/**]]></param>
         </parameters>
       </build-trigger>
     </build-triggers>
@@ -206,7 +206,7 @@ rsync3 --include '*:allarch:*' \
           <param name="filterAuthorRole" value="EVERYBODY" />
           <param name="providerType" value="github" />
           <param name="secure:accessToken" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
-          <param name="vcsRootId" value="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid" />
+          <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
         </parameters>
       </extension>
     </build-extensions>
