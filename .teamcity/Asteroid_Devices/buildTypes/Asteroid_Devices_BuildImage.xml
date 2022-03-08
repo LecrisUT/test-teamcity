@@ -137,7 +137,9 @@ rsync3 --include '*:allarch:*' \
       <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
         <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_MetaAsteroidApps" />
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroidApps">
+        <checkout-rule rule="+:.=&gt;src/meta-asteroid-apps" />
+      </vcs-entry-ref>
     </vcs-settings>
     <requirements />
     <build-triggers>
