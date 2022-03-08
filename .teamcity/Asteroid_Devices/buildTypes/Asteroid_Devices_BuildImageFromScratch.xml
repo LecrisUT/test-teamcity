@@ -81,7 +81,7 @@ fi]]></param>
         <parameters>
           <param name="jetbrains.buildServer.deployer.targetUrl" value="%system.sstate.server.upload_address%" />
           <param name="jetbrains.buildServer.deployer.username" value="%system.sstate.server.user%" />
-          <param name="jetbrains.buildServer.sshexec.authMethod" value="UPLOADED_KEY" />
+          <param name="jetbrains.buildServer.sshexec.authMethod" value="SSH_AGENT" />
           <param name="jetbrains.buildServer.sshexec.command" value="rm -r /var/www/asteroidos/%system.MACHINE%" />
           <param name="teamcity.step.mode" value="default" />
           <param name="teamcitySshKey" value="Sstate Server Key" />
