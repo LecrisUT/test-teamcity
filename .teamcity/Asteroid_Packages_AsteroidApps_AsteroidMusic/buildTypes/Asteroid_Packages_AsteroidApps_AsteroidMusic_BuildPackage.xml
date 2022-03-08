@@ -3,9 +3,7 @@
   <name>Build Package</name>
   <description />
   <settings>
-    <parameters>
-      <param name="PackageVCS_URL" value="https://github.com/AsteroidOS/asteroid-music.git" />
-    </parameters>
+    <parameters />
     <build-runners />
     <vcs-settings />
     <requirements />
