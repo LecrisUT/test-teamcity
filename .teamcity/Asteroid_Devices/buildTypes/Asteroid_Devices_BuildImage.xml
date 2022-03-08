@@ -168,8 +168,9 @@ rsync3 --include '*:allarch:*' \
           <param name="branchFilter"><![CDATA[+:<default>
 +:pull/*]]></param>
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach:/meta-%system.MACHINE%/**
-+:root=Asteroid_Devices_MetaSmatwtach;comment=^(?:[^:\n]*)(%system.MACHINE%)(?:[^:\n]*)[:]:**]]></param>
+          <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach;comment=^(?!\[NoBuild\]:).+:/meta-%system.MACHINE%/**
++:root=Asteroid_Devices_MetaSmatwtach;comment=^(?:[^:\n]*)(%system.MACHINE%)(?:[^:\n]*)[:]:**
++:root=Asteroid_MetaAsteroid;comment=^(?!\[NoBuild\]:).+:**]]></param>
         </parameters>
       </build-trigger>
       <build-trigger id="TRIGGER_15" type="vcsTrigger">
