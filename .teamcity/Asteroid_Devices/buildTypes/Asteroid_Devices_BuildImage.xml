@@ -85,11 +85,10 @@ build/sstate-cache/**/*:*:*:*:*:%system.architecture%:* => %system.architecture%
 build/sstate-cache/**/*:*:*:*:*:allarch:* => allarch/sstate-cache
 build/sstate-cache => sstate-cache]]></param>
           <param name="jetbrains.buildServer.deployer.ssh.transport" value="jetbrains.buildServer.deployer.ssh.transport.scp" />
-          <param name="jetbrains.buildServer.deployer.targetUrl" value="%system.sstate.server.upload_address%:/var/www/asteroidos" />
+          <param name="jetbrains.buildServer.deployer.targetUrl" value="%system.sstate.server.upload_address%:%system.sstate.server.location%" />
           <param name="jetbrains.buildServer.deployer.username" value="%system.sstate.server.user%" />
-          <param name="jetbrains.buildServer.sshexec.authMethod" value="UPLOADED_KEY" />
+          <param name="jetbrains.buildServer.sshexec.authMethod" value="SSH_AGENT" />
           <param name="teamcity.step.mode" value="default" />
-          <param name="teamcitySshKey" value="SState server key" />
         </parameters>
       </runner>
       <runner id="RUNNER_21" name="Upload sstate-cache" type="simpleRunner">
