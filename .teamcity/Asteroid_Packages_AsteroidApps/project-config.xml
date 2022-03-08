@@ -4,7 +4,7 @@
   <description>Core AsteroidOS packages</description>
   <default-template ref="Asteroid_Packages_AsteroidApps_BuildPackage" />
   <parameters>
-    <param name="system.recipeLayer" value="meta-asteroid" />
+    <param name="system.recipeLayer" value="meta-asteroid-apps" />
   </parameters>
   <cleanup />
 </project>
