@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Asteroid_Devices" uuid="a9e1aae7-49d5-46ed-bab1-3d0379840c4a" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>narwhal</name>
+  <parameters />
+  <cleanup />
+</project>
+

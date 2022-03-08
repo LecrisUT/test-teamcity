@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="49a4c870-4762-4bb0-8d92-48371142576e" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Build Image</name>
+  <description>Build Asteroid image with latest sstate-cache</description>
+  <settings>
+    <options>
+      <option name="allowPersonalBuildTriggering" value="false" />
+      <option name="artifactRules" value="+:build/tmp-glibc/deploy/images/%system.MACHINE%/asteroid-image-%system.MACHINE%.ext4&#xA;+:build/tmp-glibc/deploy/images/%system.MACHINE%/zImage-dtb-%system.MACHINE%.fastboot" />
+      <option name="cleanBuild" value="true" />
+      <option name="maximumNumberOfBuilds" value="1" />
+      <option name="publishArtifactCondition" value="SUCCESSFUL" />
+    </options>
+    <disabled-settings>
+      <setting-ref ref="RUNNER_16" />
+      <setting-ref ref="RUNNER_7" />
+      <setting-ref ref="TRIGGER_14" />
+      <setting-ref ref="TRIGGER_5" />
+    </disabled-settings>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_2" name="Prepare config files" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[mkdir -p build/conf
+echo 'DISTRO = "asteroid"
+MACHINE = "%system.MACHINE%"
+PACKAGE_CLASSES = "package_ipk"
+SSTATE_MIRRORS ?= " \
+    file://.* %system.sstate.server.address%/%system.MACHINE%/sstate-cache/PATH;downloadfilename=PATH \n \
+    file://.* %system.sstate.server.address%/%system.architecture%/sstate-cache/PATH;downloadfilename=PATH \n \
+    file://.* %system.sstate.server.address%/allarch/sstate-cache/PATH;downloadfilename=PATH \n \
+    file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \n \
+    "' >> build/conf/local.conf
+echo 'BBPATH = "${TOPDIR}"
+SRCDIR = "${@os.path.abspath(os.path.join("${TOPDIR}", "../src/"))}"
+
+BBLAYERS = " \
+  ${SRCDIR}/meta-qt5 \
+  ${SRCDIR}/oe-core/meta \
+  ${SRCDIR}/meta-asteroid \
+  ${SRCDIR}/meta-openembedded/meta-oe \
+  ${SRCDIR}/meta-openembedded/meta-multimedia \
+  ${SRCDIR}/meta-openembedded/meta-gnome \
+  ${SRCDIR}/meta-openembedded/meta-networking \
+  ${SRCDIR}/meta-smartphone/meta-android \
+  ${SRCDIR}/meta-openembedded/meta-python \
+  ${SRCDIR}/meta-openembedded/meta-filesystems \
+  ${SRCDIR}/meta-smartwatch/meta-%system.MACHINE% \
+  "' > build/conf/bblayers.conf
+
+# Try to initialize OE environment
+source ./src/oe-core/oe-init-build-env]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_7" name="Debug filestructure" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[cd build
+tree
+tail -n +0 conf/*]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_3" name="Build Image" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[source src/oe-core/oe-init-build-env > /dev/null
+#bitbake \
+#  --ui=teamcity \
+#  asteroid-image
+
+echo "Starting bitbake"
+
+bitbake --ui=teamcity asteroid-image]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_16" name="" type="ssh-deploy-runner">
+        <parameters>
+          <param name="jetbrains.buildServer.deployer.sourcePath"><![CDATA[build/sstate-cache/fedora-35 => other-sstate/sstate-cache/fedora-35
+build/sstate-cache/**/*:*:*:*:*::* => other-sstate/sstate-cache
+build/sstate-cache/**/*:*:*:*:*:%system.MACHINE%:* => %system.MACHINE%/sstate-cache
+build/sstate-cache/**/*:*:*:*:*:%system.architecture%:* => %system.architecture%/sstate-cache
+build/sstate-cache/**/*:*:*:*:*:allarch:* => allarch/sstate-cache
+build/sstate-cache => sstate-cache]]></param>
+          <param name="jetbrains.buildServer.deployer.ssh.transport" value="jetbrains.buildServer.deployer.ssh.transport.scp" />
+          <param name="jetbrains.buildServer.deployer.targetUrl" value="%system.sstate.server.upload_address%:/var/www/asteroidos" />
+          <param name="jetbrains.buildServer.deployer.username" value="%system.sstate.server.user%" />
+          <param name="jetbrains.buildServer.sshexec.authMethod" value="UPLOADED_KEY" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="teamcitySshKey" value="SState server key" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_21" name="Upload sstate-cache" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[alias rsync2 = "rsync -a --prune-empty-dirs --remove-source-files \ 
+    --checksum --progress"
+alias rsync3 = "rsync2 \
+    --include '*/'  --exclude '*'"
+ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:/var/www/asteroidos"
+
+
+rsync2 build/sstae-cache/fedora-35 ${ServerAddr}/other-sstate/sstate-cache
+rsync3 --include '*::*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:%system.MACHINE%:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:%system.architecture%:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:allarch:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedOpenembeddedCoreGit">
+        <checkout-rule rule="+:.=&gt;src/oe-core" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedBitbakeGit">
+        <checkout-rule rule="+:.=&gt;src/oe-core/bitbake" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedMetaOpenembeddedGit">
+        <checkout-rule rule="+:.=&gt;src/meta-openembedded" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_Devices_MetaSmatwtach">
+        <checkout-rule rule="+:.=&gt;src/meta-smartwatch" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_HttpsGithubComMetaQt5metaQt5">
+        <checkout-rule rule="+:.=&gt;src/meta-qt5" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_HttpsGithubComShrDistributionMetaSmartphone">
+        <checkout-rule rule="+:.=&gt;src/meta-smartphone" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid">
+        <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
+      </vcs-entry-ref>
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="TRIGGER_5" type="schedulingTrigger">
+        <parameters>
+          <param name="branchFilter" value="+:*" />
+          <param name="cronExpression_dm" value="*" />
+          <param name="cronExpression_dw" value="?" />
+          <param name="cronExpression_hour" value="*" />
+          <param name="cronExpression_min" value="0" />
+          <param name="cronExpression_month" value="*" />
+          <param name="cronExpression_sec" value="0" />
+          <param name="cronExpression_year" value="*" />
+          <param name="dayOfWeek" value="Sunday" />
+          <param name="enableQueueOptimization" value="true" />
+          <param name="hour" value="12" />
+          <param name="minute" value="0" />
+          <param name="promoteWatchedBuild" value="true" />
+          <param name="revisionRule" value="lastFinished" />
+          <param name="revisionRuleBuildBranch" value="+:&lt;default&gt;" />
+          <param name="schedulingPolicy" value="daily" />
+          <param name="timezone" value="SERVER" />
+          <param name="triggerBuildWithPendingChangesOnly" value="true" />
+          <param name="triggerRules" value="+:**" />
+        </parameters>
+      </build-trigger>
+      <build-trigger id="TRIGGER_14" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter"><![CDATA[+:<default>
++:pull/*]]></param>
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+          <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach:/meta-%system.MACHINE%/**
++:root=Asteroid_Devices_MetaSmatwtach;comment=^(?:[^:\n]*)(%system.MACHINE%)(?:[^:\n]*)[:]:**]]></param>
+        </parameters>
+      </build-trigger>
+      <build-trigger id="TRIGGER_15" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter"><![CDATA[+:<default>
++:pull/*]]></param>
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+          <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach;comment=^(?!\[NoBuild\]:).+:/meta-%system.MACHINE%/**
++:root=Asteroid_Devices_MetaSmatwtach;comment=^\[(?:[^\]\n]*)(%system.MACHINE%)(?:[^\]\n]*)\][:]:**
++:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid:**
+-:root=Asteroid_HttpsGithubComAsteroidOSMetaAsteroid:/recipes-asteroid/**]]></param>
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_1" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="token" />
+          <param name="filterAuthorRole" value="EVERYBODY" />
+          <param name="providerType" value="github" />
+          <param name="secure:accessToken" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
+          <param name="vcsRootId" value="Asteroid_Devices_MetaSmatwtach" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_2" type="ssh-agent-build-feature">
+        <parameters>
+          <param name="teamcitySshKey" value="SState server key" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_7" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="token" />
+          <param name="filterAuthorRole" value="EVERYBODY" />
+          <param name="providerType" value="github" />
+          <param name="secure:accessToken" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
+          <param name="vcsRootId" value="Asteroid_HttpsGithubComAsteroidOSMetaAsteroid" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <cleanup />
+  </settings>
+</template>
+
