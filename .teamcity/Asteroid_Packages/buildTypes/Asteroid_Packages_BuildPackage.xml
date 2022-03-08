@@ -167,16 +167,6 @@ rsync3 --include '*:allarch:*' \
           <param name="vcsRootId" value="Asteroid_Packages_PackageSource" />
         </parameters>
       </extension>
-      <extension id="BUILD_EXT_3" type="commit-status-publisher">
-        <parameters>
-          <param name="github_authentication_type" value="token" />
-          <param name="github_host" value="https://api.github.com" />
-          <param name="github_oauth_user" value="LecrisUT" />
-          <param name="publisherId" value="githubStatusPublisher" />
-          <param name="secure:github_access_token" value="credentialsJSON:639d34cf-d950-4eb1-afe8-6ae556a4a492" />
-          <param name="vcsRootId" value="Asteroid_MetaAsteroidApps" />
-        </parameters>
-      </extension>
       <extension id="BUILD_EXT_8" type="pullRequests">
         <parameters>
           <param name="authenticationType" value="token" />
