@@ -11,7 +11,6 @@
     <disabled-settings>
       <setting-ref ref="RUNNER_1" />
       <setting-ref ref="RUNNER_17" />
-      <setting-ref ref="RUNNER_5" />
     </disabled-settings>
     <parameters />
     <build-runners>
@@ -56,25 +55,6 @@ bitbake \
   asteroid-image]]></param>
           <param name="teamcity.step.mode" value="default" />
           <param name="use.custom.script" value="true" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_5" name="Backup old cache" type="ssh-exec-runner">
-        <parameters>
-          <param name="jetbrains.buildServer.deployer.targetUrl" value="%system.sstate.server.upload_address%" />
-          <param name="jetbrains.buildServer.deployer.username" value="%system.sstate.server.user%" />
-          <param name="jetbrains.buildServer.sshexec.authMethod" value="UPLOADED_KEY" />
-          <param name="jetbrains.buildServer.sshexec.command"><![CDATA[mkdir -p /var/www/asteroidos/%system.MACHINE%/archives
-cd /var/www/asteroidos/%system.MACHINE%
-
-# Check if there are any files besides the archives
-if [ -d sstate-cache ]; then
-  tar -c \
-    --file="archives/%system.MACHINE%_$(date -I).tar.gz" \
-    sstate-cache
-  rm -r sstate-cache
-fi]]></param>
-          <param name="teamcity.step.mode" value="default" />
-          <param name="teamcitySshKey" value="SState server key" />
         </parameters>
       </runner>
       <runner id="RUNNER_17" name="Delete old cache" type="ssh-exec-runner">
