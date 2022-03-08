@@ -4,10 +4,12 @@
   <param name="agentCleanFilesPolicy" value="ALL_UNTRACKED" />
   <param name="agentCleanPolicy" value="ON_BRANCH_CHANGE" />
   <param name="authMethod" value="PASSWORD" />
-  <param name="branch" value="refs/heads/main" />
+  <param name="branch" value="refs/heads/asteroid.org" />
   <param name="ignoreKnownHosts" value="true" />
-  <param name="secure:password" value="credentialsJSON:9e8f88b9-b123-470b-851a-f71bdfb66ed8" />
+  <param name="oauthProviderId" value="PROJECT_EXT_3" />
+  <param name="secure:password" value="credentialsJSON:836a3413-fc4f-4397-a93c-e32a083800ba" />
   <param name="submoduleCheckout" value="CHECKOUT" />
+  <param name="tokenType" value="undefined" />
   <param name="url" value="https://github.com/LecrisUT/test-teamcity" />
   <param name="useAlternates" value="AUTO" />
   <param name="username" value="LecrisUT" />
