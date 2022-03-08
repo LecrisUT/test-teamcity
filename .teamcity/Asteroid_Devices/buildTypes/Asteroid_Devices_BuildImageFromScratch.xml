@@ -140,7 +140,7 @@ build/sstate-cache => sstate-cache]]></param>
       </build-trigger>
       <build-trigger id="TRIGGER_7" type="schedulingTrigger">
         <parameters>
-          <param name="branchFilter" value="+:*" />
+          <param name="branchFilter" value="+:&lt;default&gt;" />
           <param name="cronExpression_dm" value="*" />
           <param name="cronExpression_dw" value="?" />
           <param name="cronExpression_hour" value="*" />
