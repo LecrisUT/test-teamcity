@@ -84,7 +84,7 @@ fi]]></param>
           <param name="jetbrains.buildServer.sshexec.authMethod" value="UPLOADED_KEY" />
           <param name="jetbrains.buildServer.sshexec.command" value="rm -r /var/www/asteroidos/%system.MACHINE%" />
           <param name="teamcity.step.mode" value="default" />
-          <param name="teamcitySshKey" value="SState server key" />
+          <param name="teamcitySshKey" value="Sstate Server Key" />
         </parameters>
       </runner>
       <runner id="RUNNER_1" name="Upload sstate-cache" type="simpleRunner">
