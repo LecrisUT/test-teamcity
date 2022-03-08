@@ -119,7 +119,7 @@ rsync3 --include '*:allarch:*' \
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedOpenembeddedCoreGit">
         <checkout-rule rule="+:.=&gt;src/oe-core" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedBitbakeGit">
+      <vcs-entry-ref root-id="Asteroid_Bitbake">
         <checkout-rule rule="+:.=&gt;src/oe-core/bitbake" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedMetaOpenembeddedGit">
