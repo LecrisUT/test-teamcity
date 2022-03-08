@@ -89,6 +89,14 @@ rsync3 --include '*:allarch:*' \
           <param name="use.custom.script" value="true" />
         </parameters>
       </runner>
+      <runner id="RUNNER_4" name="Compress sstate-cache" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[cd build
+tar -cf ../sstate-cache-%system.MACHINE%.tar.gz sstate-cache]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
     </build-runners>
     <vcs-settings>
       <vcs-entry-ref root-id="Asteroid_OpenEmbeddedCore">
