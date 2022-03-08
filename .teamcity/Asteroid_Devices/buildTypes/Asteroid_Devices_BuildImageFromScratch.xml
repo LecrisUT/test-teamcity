@@ -86,7 +86,7 @@ fi]]></param>
           <param name="teamcitySshKey" value="SState server key" />
         </parameters>
       </runner>
-      <runner id="RUNNER_1" name="Upload sstate-cache (1)" type="simpleRunner">
+      <runner id="RUNNER_1" name="Upload sstate-cache" type="simpleRunner">
         <parameters>
           <param name="script.content"><![CDATA[alias rsync2 = "rsync -a --prune-empty-dirs --remove-source-files \ 
     --checksum --progress"
