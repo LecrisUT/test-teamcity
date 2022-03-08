@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Asteroid_Packages" uuid="3c7a07c3-aa04-4ba8-974b-ac7a6344e682" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
   <name>Qml Asteroid</name>
+  <default-template ref="Asteroid_Packages_BuildPackage" />
   <parameters />
   <cleanup />
 </project>
