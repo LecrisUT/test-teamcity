@@ -111,7 +111,7 @@ build/sstate-cache => sstate-cache]]></param>
       <vcs-entry-ref root-id="Asteroid_Bitbake">
         <checkout-rule rule="+:.=&gt;src/oe-core/bitbake" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedMetaOpenembeddedGit">
+      <vcs-entry-ref root-id="Asteroid_MetaOpenEmbedded">
         <checkout-rule rule="+:.=&gt;src/meta-openembedded" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_Devices_MetaSmatwtach">
