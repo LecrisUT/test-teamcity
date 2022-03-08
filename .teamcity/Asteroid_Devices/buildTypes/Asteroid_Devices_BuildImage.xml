@@ -98,7 +98,7 @@ build/sstate-cache => sstate-cache]]></param>
     --checksum --progress"
 alias rsync3 = "rsync2 \
     --include '*/'  --exclude '*'"
-ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:/var/www/asteroidos"
+ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:%system.sstate.server.location%"
 
 
 rsync2 build/sstae-cache/fedora-35 ${ServerAddr}/other-sstate/sstate-cache
