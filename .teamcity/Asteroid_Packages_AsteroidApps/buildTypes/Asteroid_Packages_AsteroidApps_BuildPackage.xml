@@ -159,6 +159,16 @@ bitbake \
           <param name="vcsRootId" value="Asteroid_Packages_AsteroidApps_PackageSource" />
         </parameters>
       </extension>
+      <extension id="BUILD_EXT_3" type="commit-status-publisher">
+        <parameters>
+          <param name="github_authentication_type" value="token" />
+          <param name="github_host" value="https://api.github.com" />
+          <param name="github_oauth_user" value="LecrisUT" />
+          <param name="publisherId" value="githubStatusPublisher" />
+          <param name="secure:github_access_token" value="credentialsJSON:0a0992f8-fe65-40ae-ba51-afa3077ea985" />
+          <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
+        </parameters>
+      </extension>
     </build-extensions>
     <cleanup />
   </settings>
