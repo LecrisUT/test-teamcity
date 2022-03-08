@@ -167,7 +167,7 @@ bitbake \
           <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
           <param name="secure:github_access_token" value="credentialsJSON:639d34cf-d950-4eb1-afe8-6ae556a4a492" />
-          <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
+          <param name="vcsRootId" value="Asteroid_MetaAsteroidApps" />
         </parameters>
       </extension>
       <extension id="BUILD_EXT_8" type="pullRequests">
