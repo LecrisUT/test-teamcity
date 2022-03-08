@@ -114,8 +114,8 @@ rsync3 --include '*:allarch:*' \
 +:pull/*]]></param>
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules"><![CDATA[+:root=Asteroid_MetaAsteroidApps;comment=^(?!\[NoBuild\]:).+:/%system.recipeName%/**
-+:root=Asteroid_MetaAsteroidApps;comment=^\[%system.recipeName%\][:]:**]]></param>
+          <param name="triggerRules"><![CDATA[+:root=Asteroid_MetaAsteroid;comment=^(?!\[NoBuild\]:).+:/recipes-asteroid/%system.recipeName%/**
++:root=Asteroid_MetaAsteroid;comment=^\[%system.recipeName%\][:]:**]]></param>
         </parameters>
       </build-trigger>
       <build-trigger id="TRIGGER_16" type="vcsTrigger">
