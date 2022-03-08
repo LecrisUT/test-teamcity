@@ -3,16 +3,13 @@
   <name>Temp Settings Repository</name>
   <param name="agentCleanFilesPolicy" value="ALL_UNTRACKED" />
   <param name="agentCleanPolicy" value="ON_BRANCH_CHANGE" />
-  <param name="authMethod" value="PASSWORD" />
+  <param name="authMethod" value="TEAMCITY_SSH_KEY" />
   <param name="branch" value="refs/heads/asteroid.org" />
   <param name="ignoreKnownHosts" value="true" />
-  <param name="oauthProviderId" value="PROJECT_EXT_3" />
-  <param name="secure:password" value="credentialsJSON:60a0fd1c-7f14-47c6-97f6-629dcb09d07a" />
   <param name="submoduleCheckout" value="CHECKOUT" />
-  <param name="tokenType" value="undefined" />
-  <param name="url" value="https://github.com/LecrisUT/test-teamcity.git" />
+  <param name="teamcitySshKey" value="Github Deploy Key" />
+  <param name="url" value="git@github.com:LecrisUT/test-teamcity.git" />
   <param name="useAlternates" value="AUTO" />
-  <param name="username" value="LecrisUT" />
   <param name="usernameStyle" value="USERID" />
 </vcs-root>
 
