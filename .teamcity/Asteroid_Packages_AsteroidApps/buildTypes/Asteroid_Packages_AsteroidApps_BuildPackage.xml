@@ -105,7 +105,7 @@ rsync3 --include '*:allarch:*' \
       <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
         <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_Packages_AsteroidApps_PackageSource">
+      <vcs-entry-ref root-id="Asteroid_Packages_PackageSource">
         <checkout-rule rule="+:. =&gt; src/%system.recipeName%" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_MetaAsteroidApps">
@@ -130,7 +130,7 @@ rsync3 --include '*:allarch:*' \
 +:pull/*]]></param>
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:root=Asteroid_Packages_AsteroidApps_PackageSource:**" />
+          <param name="triggerRules" value="+:root=Asteroid_Packages_PackageSource:**" />
         </parameters>
       </build-trigger>
       <build-trigger id="TRIGGER_2" type="vcsTrigger">
@@ -169,7 +169,7 @@ rsync3 --include '*:allarch:*' \
           <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
           <param name="providerType" value="github" />
           <param name="secure:accessToken" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
-          <param name="vcsRootId" value="Asteroid_Packages_AsteroidApps_PackageSource" />
+          <param name="vcsRootId" value="Asteroid_Packages_PackageSource" />
         </parameters>
       </extension>
       <extension id="BUILD_EXT_12" type="commit-status-publisher">
@@ -179,7 +179,7 @@ rsync3 --include '*:allarch:*' \
           <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
           <param name="secure:github_access_token" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
-          <param name="vcsRootId" value="Asteroid_Packages_AsteroidApps_PackageSource" />
+          <param name="vcsRootId" value="Asteroid_Packages_PackageSource" />
         </parameters>
       </extension>
       <extension id="BUILD_EXT_3" type="commit-status-publisher">
