@@ -6,7 +6,7 @@
     <param name="system.MACHINE" value="qemux86" spec="text display='normal' description='Device for which to build' label='Machine' validationMode='not_empty'" />
     <param name="system.architecture" value="armv7vehf-neon" spec="select description='CPU architecture for which to build' label='Architecture' data_1='armv7vehf-neon' label_1='ARMv7' display='normal'" />
     <param name="system.sstate.server.address" value="https://sstate.asteroidos.org" spec="text display='normal' description='Public address serving sstate-cache' readOnly='true' label='SState server public address' validationMode='not_empty'" />
-    <param name="system.sstate.server.upload_address" value="192.168.0.2" spec="text display='normal' description='Backend adress to upload the sstate-cache' readOnly='true' label='SState server backend address' validationMode='not_empty'" />
+    <param name="system.sstate.server.upload_address" value="127.0.0.1" spec="text description='Backend adress to upload the sstate-cache' label='SState server backend address' validationMode='not_empty' display='normal'" />
     <param name="system.sstate.server.user" value="asteroidos" spec="text display='normal' description='Username used to upload sstate-cache' readOnly='true' label='SState server user' validationMode='any'" />
   </parameters>
   <project-extensions>
