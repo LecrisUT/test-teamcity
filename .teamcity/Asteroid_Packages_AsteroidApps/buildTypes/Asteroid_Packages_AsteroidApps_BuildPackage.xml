@@ -142,13 +142,44 @@ rsync3 --include '*:allarch:*' \
       </build-trigger>
     </build-triggers>
     <build-extensions>
+      <extension id="BUILD_EXT_13" type="ssh-agent-build-feature">
+        <parameters>
+          <param name="teamcitySshKey" value="Sstate Server Key" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_11" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="token" />
+          <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
+          <param name="providerType" value="github" />
+          <param name="secure:accessToken" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
+          <param name="vcsRootId" value="Asteroid_Packages_PackageSource" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_12" type="commit-status-publisher">
+        <parameters>
+          <param name="github_authentication_type" value="token" />
+          <param name="github_host" value="https://api.github.com" />
+          <param name="publisherId" value="githubStatusPublisher" />
+          <param name="secure:github_access_token" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
+          <param name="vcsRootId" value="Asteroid_Packages_PackageSource" />
+        </parameters>
+      </extension>
       <extension id="BUILD_EXT_9" type="commit-status-publisher">
         <parameters>
           <param name="github_authentication_type" value="token" />
           <param name="github_host" value="https://api.github.com" />
-          <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
-          <param name="secure:github_access_token" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
+          <param name="secure:github_access_token" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
+          <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_8" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="token" />
+          <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
+          <param name="providerType" value="github" />
+          <param name="secure:accessToken" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
           <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
         </parameters>
       </extension>
@@ -157,51 +188,17 @@ rsync3 --include '*:allarch:*' \
           <param name="authenticationType" value="token" />
           <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
           <param name="providerType" value="github" />
-          <param name="secure:accessToken" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
+          <param name="secure:accessToken" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
           <param name="vcsRootId" value="Asteroid_MetaAsteroidApps" />
-        </parameters>
-      </extension>
-      <extension id="BUILD_EXT_11" type="pullRequests">
-        <parameters>
-          <param name="authenticationType" value="token" />
-          <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
-          <param name="providerType" value="github" />
-          <param name="secure:accessToken" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
-          <param name="vcsRootId" value="Asteroid_Packages_PackageSource" />
-        </parameters>
-      </extension>
-      <extension id="BUILD_EXT_12" type="commit-status-publisher">
-        <parameters>
-          <param name="github_authentication_type" value="token" />
-          <param name="github_host" value="https://api.github.com" />
-          <param name="github_oauth_user" value="LecrisUT" />
-          <param name="publisherId" value="githubStatusPublisher" />
-          <param name="secure:github_access_token" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
-          <param name="vcsRootId" value="Asteroid_Packages_PackageSource" />
         </parameters>
       </extension>
       <extension id="BUILD_EXT_3" type="commit-status-publisher">
         <parameters>
           <param name="github_authentication_type" value="token" />
           <param name="github_host" value="https://api.github.com" />
-          <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
-          <param name="secure:github_access_token" value="credentialsJSON:639d34cf-d950-4eb1-afe8-6ae556a4a492" />
+          <param name="secure:github_access_token" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
           <param name="vcsRootId" value="Asteroid_MetaAsteroidApps" />
-        </parameters>
-      </extension>
-      <extension id="BUILD_EXT_8" type="pullRequests">
-        <parameters>
-          <param name="authenticationType" value="token" />
-          <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
-          <param name="providerType" value="github" />
-          <param name="secure:accessToken" value="credentialsJSON:109c7460-5345-4633-92c2-968391afd1b9" />
-          <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
-        </parameters>
-      </extension>
-      <extension id="BUILD_EXT_13" type="ssh-agent-build-feature">
-        <parameters>
-          <param name="teamcitySshKey" value="Sstate Server Key" />
         </parameters>
       </extension>
     </build-extensions>

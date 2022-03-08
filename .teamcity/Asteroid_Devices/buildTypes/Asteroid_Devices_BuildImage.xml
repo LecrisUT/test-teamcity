@@ -188,27 +188,18 @@ rsync3 --include '*:allarch:*' \
       </build-trigger>
     </build-triggers>
     <build-extensions>
-      <extension id="BUILD_EXT_1" type="pullRequests">
-        <parameters>
-          <param name="authenticationType" value="token" />
-          <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
-          <param name="providerType" value="github" />
-          <param name="secure:accessToken" value="credentialsJSON:fd4152c7-9fb1-484f-8a50-f4b104808e70" />
-          <param name="vcsRootId" value="Asteroid_Devices_MetaSmatwtach" />
-        </parameters>
-      </extension>
       <extension id="BUILD_EXT_2" type="ssh-agent-build-feature">
         <parameters>
           <param name="teamcitySshKey" value="Sstate Server Key" />
         </parameters>
       </extension>
-      <extension id="BUILD_EXT_7" type="pullRequests">
+      <extension id="BUILD_EXT_1" type="pullRequests">
         <parameters>
           <param name="authenticationType" value="token" />
           <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
           <param name="providerType" value="github" />
-          <param name="secure:accessToken" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
-          <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
+          <param name="secure:accessToken" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
+          <param name="vcsRootId" value="Asteroid_Devices_MetaSmatwtach" />
         </parameters>
       </extension>
       <extension id="BUILD_EXT_4" type="commit-status-publisher">
@@ -217,8 +208,17 @@ rsync3 --include '*:allarch:*' \
           <param name="github_host" value="https://api.github.com" />
           <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
-          <param name="secure:github_access_token" value="credentialsJSON:109c7460-5345-4633-92c2-968391afd1b9" />
+          <param name="secure:github_access_token" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
           <param name="vcsRootId" value="Asteroid_Devices_MetaSmatwtach" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_7" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="token" />
+          <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
+          <param name="providerType" value="github" />
+          <param name="secure:accessToken" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
+          <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
         </parameters>
       </extension>
       <extension id="BUILD_EXT_5" type="commit-status-publisher">
@@ -227,7 +227,7 @@ rsync3 --include '*:allarch:*' \
           <param name="github_host" value="https://api.github.com" />
           <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
-          <param name="secure:github_access_token" value="credentialsJSON:109c7460-5345-4633-92c2-968391afd1b9" />
+          <param name="secure:github_access_token" value="credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a" />
           <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
         </parameters>
       </extension>

@@ -11,7 +11,7 @@
     <param name="system.sstate.server.user" value="asteroidos" spec="text display='normal' description='Username used to upload sstate-cache' readOnly='true' label='SState server user' validationMode='any'" />
   </parameters>
   <project-extensions>
-    <extension id="PROJECT_EXT_4" type="OAuthProvider">
+    <!--extension id="PROJECT_EXT_4" type="OAuthProvider">
       <parameters>
         <param name="clientId" value="Iv1.54a435f1ce7b89aa" />
         <param name="defaultTokenScope" value="public_repo,repo,repo:status,write:repo_hook" />
@@ -20,7 +20,7 @@
         <param name="providerType" value="GitHub" />
         <param name="secure:clientSecret" value="credentialsJSON:a69addcf-99a9-4b09-81bc-8fb85516b239" />
       </parameters>
-    </extension>
+    </extension-->
     <extension id="PROJECT_EXT_6" type="active_storage">
       <parameters>
         <param name="active.storage.feature.id" value="DefaultStorage" />
