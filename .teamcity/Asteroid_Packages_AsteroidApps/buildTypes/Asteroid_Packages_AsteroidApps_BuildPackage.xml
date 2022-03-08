@@ -86,6 +86,7 @@ bitbake \
       <vcs-entry-ref root-id="Asteroid_Packages_AsteroidApps_PackageSource">
         <checkout-rule rule="+:. =&gt; src/%system.recipeName%" />
       </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_Packages_AsteroidApps_MetaAsteroidApps" />
     </vcs-settings>
     <requirements />
     <build-triggers>
