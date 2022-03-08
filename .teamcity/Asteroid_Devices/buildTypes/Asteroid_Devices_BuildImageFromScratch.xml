@@ -10,7 +10,6 @@
     </options>
     <disabled-settings>
       <setting-ref ref="RUNNER_17" />
-      <setting-ref ref="RUNNER_18" />
       <setting-ref ref="RUNNER_5" />
     </disabled-settings>
     <parameters />
@@ -83,22 +82,6 @@ fi]]></param>
           <param name="jetbrains.buildServer.deployer.username" value="%system.sstate.server.user%" />
           <param name="jetbrains.buildServer.sshexec.authMethod" value="UPLOADED_KEY" />
           <param name="jetbrains.buildServer.sshexec.command" value="rm -r /var/www/asteroidos/%system.MACHINE%" />
-          <param name="teamcity.step.mode" value="default" />
-          <param name="teamcitySshKey" value="SState server key" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_18" name="Upload sstate-cache" type="ssh-deploy-runner">
-        <parameters>
-          <param name="jetbrains.buildServer.deployer.sourcePath"><![CDATA[build/sstate-cache/fedora-35 => other-sstate/sstate-cache/fedora-35
-build/sstate-cache/**/*:*:*:*:*::* => other-sstate/sstate-cache
-build/sstate-cache/**/*:*:*:*:*:%system.MACHINE%:* => %system.MACHINE%/sstate-cache
-build/sstate-cache/**/*:*:*:*:*:%system.architecture%:* => %system.architecture%/sstate-cache
-build/sstate-cache/**/*:*:*:*:*:allarch:* => allarch/sstate-cache
-build/sstate-cache => sstate-cache]]></param>
-          <param name="jetbrains.buildServer.deployer.ssh.transport" value="jetbrains.buildServer.deployer.ssh.transport.scp" />
-          <param name="jetbrains.buildServer.deployer.targetUrl" value="%system.sstate.server.upload_address%:/var/www/asteroidos" />
-          <param name="jetbrains.buildServer.deployer.username" value="%system.sstate.server.user%" />
-          <param name="jetbrains.buildServer.sshexec.authMethod" value="UPLOADED_KEY" />
           <param name="teamcity.step.mode" value="default" />
           <param name="teamcitySshKey" value="SState server key" />
         </parameters>
