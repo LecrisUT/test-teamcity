@@ -122,7 +122,9 @@ tar -cf ../sstate-cache-%system.MACHINE%.tar.gz sstate-cache]]></param>
       <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
         <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_MetaAsteroidApps" />
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroidApps">
+        <checkout-rule rule="+:.=&gt;src/meta-asteroid-apps" />
+      </vcs-entry-ref>
     </vcs-settings>
     <requirements />
     <build-triggers>
