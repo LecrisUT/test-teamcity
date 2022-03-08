@@ -189,7 +189,7 @@ rsync3 --include '*:allarch:*' \
       <extension id="BUILD_EXT_1" type="pullRequests">
         <parameters>
           <param name="authenticationType" value="token" />
-          <param name="filterAuthorRole" value="EVERYBODY" />
+          <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
           <param name="providerType" value="github" />
           <param name="secure:accessToken" value="credentialsJSON:fd4152c7-9fb1-484f-8a50-f4b104808e70" />
           <param name="vcsRootId" value="Asteroid_Devices_MetaSmatwtach" />
