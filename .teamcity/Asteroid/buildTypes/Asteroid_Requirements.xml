@@ -27,7 +27,7 @@ bitbake-selftest]]></param>
       </runner>
     </build-runners>
     <vcs-settings>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComOpenembeddedOpenembeddedCoreGit">
+      <vcs-entry-ref root-id="Asteroid_OpenEmbeddedCore">
         <checkout-rule rule="+:. =&gt; src/oe-core" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_Bitbake">
