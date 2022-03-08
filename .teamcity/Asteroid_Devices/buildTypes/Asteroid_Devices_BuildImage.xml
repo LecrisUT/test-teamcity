@@ -127,7 +127,7 @@ rsync3 --include '*:allarch:*' \
       <vcs-entry-ref root-id="Asteroid_Devices_MetaSmatwtach">
         <checkout-rule rule="+:.=&gt;src/meta-smartwatch" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_HttpsGithubComMetaQt5metaQt5">
+      <vcs-entry-ref root-id="Asteroid_MetaQt5">
         <checkout-rule rule="+:.=&gt;src/meta-qt5" />
       </vcs-entry-ref>
       <vcs-entry-ref root-id="Asteroid_MetaSmartphone">
