@@ -29,6 +29,7 @@ BBLAYERS = " \
   ${SRCDIR}/meta-qt5 \
   ${SRCDIR}/oe-core/meta \
   ${SRCDIR}/meta-asteroid \
+  ${SRCDIR}/meta-asteroid-apps \
   ${SRCDIR}/meta-openembedded/meta-oe \
   ${SRCDIR}/meta-openembedded/meta-multimedia \
   ${SRCDIR}/meta-openembedded/meta-gnome \
