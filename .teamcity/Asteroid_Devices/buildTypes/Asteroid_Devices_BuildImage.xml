@@ -180,7 +180,7 @@ rsync3 --include '*:allarch:*' \
           <param name="quietPeriodMode" value="DO_NOT_USE" />
           <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach;comment=^(?!\[NoBuild\]:).+:/meta-%system.MACHINE%/**
 +:root=Asteroid_Devices_MetaSmatwtach;comment=^\[(?:[^\]\n]*)(%system.MACHINE%)(?:[^\]\n]*)\][:]:**
-+:root=Asteroid_MetaAsteroid:**]]></param>
++:root=Asteroid_MetaAsteroid;comment=^(?!\[NoBuild\]:).+:**]]></param>
         </parameters>
       </build-trigger>
     </build-triggers>
