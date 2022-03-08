@@ -117,7 +117,7 @@ bitbake \
 +:pull/*]]></param>
           <param name="enableQueueOptimization" value="true" />
           <param name="quietPeriodMode" value="DO_NOT_USE" />
-          <param name="triggerRules" value="+:root=Asteroid_MetaAsteroid+:root=Asteroid_MetaAsteroidApps;comment=^(?!\[NoBuild\]:).+:**" />
+          <param name="triggerRules" value="+:root=Asteroid_MetaAsteroid;comment=^(?!\[NoBuild\]:).+:**" />
         </parameters>
       </build-trigger>
     </build-triggers>
