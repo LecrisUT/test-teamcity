@@ -105,9 +105,6 @@ rsync3 --include '*:allarch:*' \
       <vcs-entry-ref root-id="Asteroid_Packages_PackageSource">
         <checkout-rule rule="+:. =&gt; src/%system.recipeName%" />
       </vcs-entry-ref>
-      <vcs-entry-ref root-id="Asteroid_MetaAsteroidApps">
-        <checkout-rule rule="+:.=&gt;src/meta-asteroid-apps" />
-      </vcs-entry-ref>
     </vcs-settings>
     <requirements />
     <build-triggers>
@@ -147,7 +144,7 @@ rsync3 --include '*:allarch:*' \
           <param name="github_host" value="https://api.github.com" />
           <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
-          <param name="secure:github_access_token" value="36b204c6-8c19-4f6c-9191-8858cb1887ea" />
+          <param name="secure:github_access_token" value="credentialsJSON:36b204c6-8c19-4f6c-9191-8858cb1887ea" />
           <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
         </parameters>
       </extension>
@@ -185,7 +182,7 @@ rsync3 --include '*:allarch:*' \
           <param name="github_host" value="https://api.github.com" />
           <param name="github_oauth_user" value="LecrisUT" />
           <param name="publisherId" value="githubStatusPublisher" />
-          <param name="secure:github_access_token" value="639d34cf-d950-4eb1-afe8-6ae556a4a492" />
+          <param name="secure:github_access_token" value="credentialsJSON:639d34cf-d950-4eb1-afe8-6ae556a4a492" />
           <param name="vcsRootId" value="Asteroid_MetaAsteroidApps" />
         </parameters>
       </extension>
@@ -194,7 +191,7 @@ rsync3 --include '*:allarch:*' \
           <param name="authenticationType" value="token" />
           <param name="filterAuthorRole" value="MEMBER_OR_COLLABORATOR" />
           <param name="providerType" value="github" />
-          <param name="secure:accessToken" value="109c7460-5345-4633-92c2-968391afd1b9" />
+          <param name="secure:accessToken" value="credentialsJSON:109c7460-5345-4633-92c2-968391afd1b9" />
           <param name="vcsRootId" value="Asteroid_MetaAsteroid" />
         </parameters>
       </extension>
