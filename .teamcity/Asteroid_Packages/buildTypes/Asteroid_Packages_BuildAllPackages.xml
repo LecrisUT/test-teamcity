@@ -93,7 +93,7 @@
           <option name="take-successful-builds-only" value="true" />
         </options>
       </depend-on>
-      <depend-on sourceBuildTypeId="Asteroid_Packages_AsteroidCore_AsteroidCalendar_Build">
+      <depend-on sourceBuildTypeId="Asteroid_Packages_AsteroidApps_AsteroidCalendar_BuildPackage">
         <options>
           <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
           <option name="take-started-build-with-same-revisions" value="true" />
