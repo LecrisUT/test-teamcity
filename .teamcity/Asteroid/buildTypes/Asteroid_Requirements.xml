@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="e0fd25f5-6529-4ee7-8fb8-3f4bd5fdc699" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Requirements</name>
+  <description>Test the neccessary requirements are satisfied</description>
+  <settings>
+    <options>
+      <option name="cleanBuild" value="true" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_12" name="Check minimal configuration" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[mkdir -p build/conf
+echo 'DISTRO = "asteroid"
+PACKAGE_CLASSES = "package_ipk"' >> build/conf/local.conf
+echo 'BBPATH = "${TOPDIR}"
+SRCDIR = "${@os.path.abspath(os.path.join("${TOPDIR}", "../src/"))}"
+
+BBLAYERS = "${SRCDIR}/oe-core/meta"' > build/conf/bblayers.conf
+
+source ./src/oe-core/oe-init-build-env
+
+bitbake-selftest]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="Asteroid_OpenEmbeddedCore">
+        <checkout-rule rule="+:. =&gt; src/oe-core" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_Bitbake">
+        <checkout-rule rule="+:.=&gt;src/oe-core/bitbake" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
+        <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
+      </vcs-entry-ref>
+    </vcs-settings>
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+

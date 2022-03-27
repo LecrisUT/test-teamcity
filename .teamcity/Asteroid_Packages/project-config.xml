@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Asteroid" uuid="c3067162-fe5c-4dbe-a450-5e9a09ceb43f" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Packages</name>
+  <description>Global packages</description>
+  <parameters>
+    <param name="PackageVCS_DefaultBranch" value="refs/heads/master" spec="text display='normal' description='Default branch of the git repository' label='Default branch' validationMode='not_empty'" />
+    <param name="PackageVCS_URL" value="git@github.com:AsteroidOS/%system.recipeName%.git" spec="text display='normal' description='Git URL managing the package' label='Repository URL' validationMode='not_empty'" />
+    <param name="system.recipeLayer" value="meta-asteroid" spec="text display='normal' description='The bitbake layer location' label='Recipe layer' validationMode='not_empty'" />
+    <param name="system.recipeName" value="%system.teamcity.projectName%" spec="text display='normal' description='The name of the recipe in bitbake' label='Package name' validationMode='not_empty'" />
+  </parameters>
+  <cleanup />
+</project>
+

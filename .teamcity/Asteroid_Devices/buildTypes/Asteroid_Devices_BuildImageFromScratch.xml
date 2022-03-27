@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="3c0c1327-e0ae-418d-a455-10419d784582" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Build Image (from scratch)</name>
+  <description>Build Asteroid image and update the sstate-cache</description>
+  <settings>
+    <options>
+      <option name="allowPersonalBuildTriggering" value="false" />
+      <option name="artifactRules" value="sstate-cache-%system.MACHINE%.tar.gz" />
+      <option name="cleanBuild" value="true" />
+      <option name="maximumNumberOfBuilds" value="1" />
+      <option name="publishArtifactCondition" value="SUCCESSFUL" />
+    </options>
+    <disabled-settings>
+      <setting-ref ref="RUNNER_1" />
+      <setting-ref ref="RUNNER_17" />
+    </disabled-settings>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_2" name="Prepare config files" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[mkdir -p build/conf
+echo 'DISTRO = "asteroid"
+MACHINE = "%system.MACHINE%"
+PACKAGE_CLASSES = "package_ipk"
+SSTATE_MIRRORS ?= " \
+    file://.* https://asteroidos.lecris.dev//other-sstate/sstate-cache/PATH;downloadfilename=PATH \n \
+    "' >> build/conf/local.conf
+
+echo 'BBPATH = "${TOPDIR}"
+SRCDIR = "${@os.path.abspath(os.path.join("${TOPDIR}", "../src/"))}"
+
+BBLAYERS = " \
+  ${SRCDIR}/meta-qt5 \
+  ${SRCDIR}/oe-core/meta \
+  ${SRCDIR}/meta-asteroid \
+  ${SRCDIR}/meta-openembedded/meta-oe \
+  ${SRCDIR}/meta-openembedded/meta-multimedia \
+  ${SRCDIR}/meta-openembedded/meta-gnome \
+  ${SRCDIR}/meta-openembedded/meta-networking \
+  ${SRCDIR}/meta-smartphone/meta-android \
+  ${SRCDIR}/meta-openembedded/meta-python \
+  ${SRCDIR}/meta-openembedded/meta-filesystems \
+  ${SRCDIR}/meta-smartwatch/meta-%system.MACHINE% \
+  "' > build/conf/bblayers.conf
+
+# Try to initialize OE environment
+source ./src/oe-core/oe-init-build-env]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_3" name="Build Image" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[source src/oe-core/oe-init-build-env > /dev/null
+bitbake \
+  --ui=teamcity \
+  asteroid-image]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_17" name="Delete old cache" type="ssh-exec-runner">
+        <parameters>
+          <param name="jetbrains.buildServer.deployer.targetUrl" value="%system.sstate.server.upload_address%" />
+          <param name="jetbrains.buildServer.deployer.username" value="%system.sstate.server.user%" />
+          <param name="jetbrains.buildServer.sshexec.authMethod" value="SSH_AGENT" />
+          <param name="jetbrains.buildServer.sshexec.command" value="rm -r %system.sstate.server.location%/%system.MACHINE%" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="teamcitySshKey" value="Sstate Server Key" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_1" name="Upload sstate-cache" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[alias rsync2 = "rsync -a --prune-empty-dirs --remove-source-files \ 
+    --checksum --progress"
+alias rsync3 = "rsync2 \
+    --include '*/'  --exclude '*'"
+ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:/var/www/asteroidos"
+
+
+rsync2 build/sstae-cache/fedora-35 ${ServerAddr}/other-sstate/sstate-cache
+rsync3 --include '*::*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:%system.MACHINE%:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:%system.architecture%:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate
+rsync3 --include '*:allarch:*' \ 
+    build/sstate-cache ${ServerAddr}/other-sstate]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_4" name="Compress sstate-cache" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[cd build
+tar -cf ../sstate-cache-%system.MACHINE%.tar.gz sstate-cache]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="Asteroid_OpenEmbeddedCore">
+        <checkout-rule rule="+:.=&gt;src/oe-core" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_Bitbake">
+        <checkout-rule rule="+:.=&gt;src/oe-core/bitbake" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_MetaOpenEmbedded">
+        <checkout-rule rule="+:.=&gt;src/meta-openembedded" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_Devices_MetaSmatwtach">
+        <checkout-rule rule="+:.=&gt;src/meta-smartwatch" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_MetaQt5">
+        <checkout-rule rule="+:.=&gt;src/meta-qt5" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_MetaSmartphone">
+        <checkout-rule rule="+:.=&gt;src/meta-smartphone" />
+      </vcs-entry-ref>
+      <vcs-entry-ref root-id="Asteroid_MetaAsteroid">
+        <checkout-rule rule="+:.=&gt;src/meta-asteroid" />
+      </vcs-entry-ref>
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="TRIGGER_6" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter" value="+:&lt;default&gt;" />
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+          <param name="triggerRules"><![CDATA[+:root=Asteroid_Devices_MetaSmatwtach;comment=^\[Rebuild:(?:[^\]\n]*)(%system.MACHINE%)(?:[^\]\n]*)\][:]:**
++:root=Asteroid_MetaAsteroid:comment=^\[Rebuild:(?:[^\]\n]*)(%system.MACHINE%)(?:[^\]\n]*)\][:]:**]]></param>
+        </parameters>
+      </build-trigger>
+      <build-trigger id="TRIGGER_7" type="schedulingTrigger">
+        <parameters>
+          <param name="branchFilter" value="+:&lt;default&gt;" />
+          <param name="cronExpression_dm" value="*" />
+          <param name="cronExpression_dw" value="?" />
+          <param name="cronExpression_hour" value="*" />
+          <param name="cronExpression_min" value="0" />
+          <param name="cronExpression_month" value="*" />
+          <param name="cronExpression_sec" value="0" />
+          <param name="cronExpression_year" value="*" />
+          <param name="dayOfWeek" value="Sunday" />
+          <param name="enableQueueOptimization" value="true" />
+          <param name="hour" value="12" />
+          <param name="minute" value="0" />
+          <param name="promoteWatchedBuild" value="true" />
+          <param name="revisionRule" value="lastFinished" />
+          <param name="revisionRuleBuildBranch" value="+:&lt;default&gt;" />
+          <param name="schedulingPolicy" value="weekly" />
+          <param name="timezone" value="SERVER" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_6" type="ssh-agent-build-feature">
+        <parameters>
+          <param name="teamcitySshKey" value="Sstate Server Key" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <cleanup />
+  </settings>
+</template>
+

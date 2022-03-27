@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Asteroid_Devices" uuid="a098ce38-a83e-4ff0-a6a8-a5f055fce73a" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>lenok</name>
+  <parameters />
+  <cleanup />
+</project>
+
