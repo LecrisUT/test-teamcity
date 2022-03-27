@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Asteroid_Devices" uuid="bba43e8f-4181-4b92-8a11-399f0de9b81a" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
-  <name>dory</name>
-  <parameters />
-  <cleanup />
-</project>
-

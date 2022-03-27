@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Asteroid_Packages_AsteroidApps" uuid="998e5da2-ee2f-465d-a503-ebce13c58dd4" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
-  <name>Asteroid Diamonds</name>
-  <parameters>
-    <param name="system.recipeName" value="asteroid-diamonds" />
-  </parameters>
-  <cleanup />
-</project>
-
