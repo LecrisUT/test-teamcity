@@ -32,6 +32,30 @@ object Project : Project({
     }
 
     features {
+        feature {
+            id = "NOVA-1"
+            type = "CloudProfile"
+            param("clouds.openstack.images", """
+                teamcity_image:
+                  image: Fedora 35
+                  flavor: b2-7-flex
+                  network: Lecris
+            """.trimIndent())
+            param("clouds.openstack.instanceCap", "")
+            param("profileServerUrl", "")
+            param("total-work-time", "")
+            param("description", "")
+            param("secure:clouds.openstack.password", "credentialsJSON:7e4e1c3a-9c9b-4c7e-876c-fdf8e2ceed91")
+            param("clouds.openstack.identity", "user-vccgm6C9ZTaK")
+            param("cloud-code", "NOVA")
+            param("clouds.openstack.endpointUrl", "https://auth.cloud.ovh.net/")
+            param("enabled", "true")
+            param("profileId", "NOVA-1")
+            param("name", "OVH")
+            param("next-hour", "")
+            param("terminate-idle-time", "30")
+            param("clouds.openstack.zone", "SGP1")
+        }
         spaceConnection {
             id = "PROJECT_EXT_2"
             displayName = "JetBrains Space"
