@@ -5,6 +5,7 @@ import _Self.vcsRoots.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.activeStorage
+import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.spaceConnection
 
 object Project : Project({
     description = "Base Asteroid Project"
@@ -31,6 +32,13 @@ object Project : Project({
     }
 
     features {
+        spaceConnection {
+            id = "PROJECT_EXT_2"
+            displayName = "JetBrains Space"
+            serverUrl = "lecris.jetbrains.space"
+            clientId = "a818759e-d905-4460-8b30-bbbc1c754f4a"
+            clientSecret = "credentialsJSON:5f080570-56d5-45d0-adc2-e3ba7dd2728b"
+        }
         activeStorage {
             id = "PROJECT_EXT_6"
             activeStorageID = "DefaultStorage"
