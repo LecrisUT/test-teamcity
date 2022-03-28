@@ -40,9 +40,11 @@ object Project : Project({
                   image: Fedora 35
                   flavor: b2-7-flex
                   network: Lecris
+                  security_group: default
             """.trimIndent())
             param("clouds.openstack.instanceCap", "")
             param("profileServerUrl", "")
+            param("system.cloud.profile_id", "NOVA-1")
             param("total-work-time", "")
             param("description", "")
             param("secure:clouds.openstack.password", "credentialsJSON:7e4e1c3a-9c9b-4c7e-876c-fdf8e2ceed91")
