@@ -42,7 +42,7 @@ object Project : Project({
                   network: Lecris
                   security_group: default
             """.trimIndent())
-            param("clouds.openstack.instanceCap", "")
+            param("clouds.openstack.instanceCap", "1")
             param("profileServerUrl", "")
             param("system.cloud.profile_id", "NOVA-1")
             param("total-work-time", "")
