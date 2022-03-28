@@ -51,7 +51,7 @@ object Project : Project({
             param("clouds.openstack.identity", "user-vccgm6C9ZTaK")
             param("cloud-code", "NOVA")
             param("clouds.openstack.endpointUrl", "https://auth.cloud.ovh.net/v3/")
-            param("enabled", "false")
+            param("enabled", "true")
             param("profileId", "NOVA-1")
             param("name", "OVH")
             param("next-hour", "")
