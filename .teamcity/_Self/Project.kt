@@ -50,7 +50,7 @@ object Project : Project({
             param("secure:clouds.openstack.password", "credentialsJSON:7e4e1c3a-9c9b-4c7e-876c-fdf8e2ceed91")
             param("clouds.openstack.identity", "user-vccgm6C9ZTaK")
             param("cloud-code", "NOVA")
-            param("clouds.openstack.endpointUrl", "https://workflow.sgp1.cloud.ovh.net/v2")
+            param("clouds.openstack.endpointUrl", "https://auth.cloud.ovh.net/v3/")
             param("enabled", "true")
             param("profileId", "NOVA-1")
             param("name", "OVH")
