@@ -37,9 +37,9 @@ object Project : Project({
             type = "CloudProfile"
             param("clouds.openstack.images", """
                 teamcity_image:
-                  image: Fedora 35
+                  image: 5e8a6ba5-53f0-4203-a1b4-6d87b334549a
                   flavor: b2-7-flex
-                  network: Lecris
+                  network: c16b7829-5a5b-4dfb-9272-77466becbb7e
                   security_group: default
             """.trimIndent())
             param("clouds.openstack.instanceCap", "1")
