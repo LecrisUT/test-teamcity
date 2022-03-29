@@ -52,6 +52,7 @@ object Project : Project({
             param("cloud-code", "NOVA")
             param("clouds.openstack.endpointUrl", "https://auth.cloud.ovh.net/v3")
             param("enabled", "true")
+            param("agentPushPreset", "1648592477883")
             param("profileId", "NOVA-1")
             param("name", "OVH")
             param("next-hour", "")
