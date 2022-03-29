@@ -48,7 +48,7 @@ object Project : Project({
             param("total-work-time", "")
             param("description", "")
             param("secure:clouds.openstack.password", "credentialsJSON:6c283478-c99d-4491-93e5-d760715cc0c4")
-            param("clouds.openstack.identity", "user-vccgm6C9ZTaK")
+            param("clouds.openstack.identity", "5016068747623170:user-vccgm6C9ZTaK")
             param("cloud-code", "NOVA")
             param("clouds.openstack.endpointUrl", "https://auth.cloud.ovh.net/v3")
             param("enabled", "true")
