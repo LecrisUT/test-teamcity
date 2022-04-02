@@ -30,4 +30,4 @@ the 'Debug' option is available in the context menu for the task.
 */
 
 version = "2021.2"
-project(_Self.Project)
+project(asteroid.AsteroidProject)
