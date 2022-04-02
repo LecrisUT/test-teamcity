@@ -48,7 +48,7 @@ object AsteroidProject : Project({
         )
         text(
             "system.sstate.server.address",
-            "https://asteroidos.lecris.dev",
+            "https://sstate.asteroid.org",
             label = "SState server public address",
             description = "Public address serving sstate-cache",
             readOnly = true,

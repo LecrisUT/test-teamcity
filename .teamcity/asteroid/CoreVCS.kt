@@ -58,13 +58,6 @@ object CoreVCS {
         url = "https://github.com/$upstream/meta-smartwatch.git"
         branch = "refs/heads/master"
     }
-    // TODO: Switch TempRepository to main asteroid VCS
-    var TempRepository = GitVcsRoot {
-        id("SettingsVCS")
-        name = "Teamcity Asteroid Settings"
-        url = "https://github.com/LecrisUT/test-teamcity"
-        branch = "refs/heads/lecris.dev"
-    }
     fun all(): List<VcsRoot>{
         return listOf(
             Asteroid,
@@ -74,8 +67,7 @@ object CoreVCS {
             MetaQt5,
             MetaSmartphone,
             MetaAsteroid,
-            MetaSmartwatch,
-            TempRepository
+            MetaSmartwatch
         )
     }
     fun attachVCS(init: VcsSettings, forDevice: Boolean = false) {
