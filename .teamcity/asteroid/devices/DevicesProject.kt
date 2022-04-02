@@ -16,6 +16,7 @@ object DevicesProject : Project({
     val devicesNames = DslContext.getParameter("Devices")
         .split("[\\s,]".toRegex()).toList()
         .filterNot { it.isEmpty() }
+    // TODO: Add a map of device -> architecture
     val devices :List<Project> = devicesNames.map { makeDeviceProject(it) }
     for (device in devices)
         subProject(device)
