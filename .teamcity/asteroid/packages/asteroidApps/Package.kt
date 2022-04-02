@@ -44,6 +44,7 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
         root(recipeVCS,"+:.=>src/${recipe}")
     }
 
+    // TODO: Change the hardcoded sturgeon to generic
     steps {
         script {
             name = "Prepare config files"
@@ -54,8 +55,8 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
                 MACHINE = "%system.MACHINE%"
                 PACKAGE_CLASSES = "package_ipk"
                 SSTATE_MIRRORS ?= " \
-                    file://.* %system.sstate.server.address%/%system.MACHINE%/sstate-cache/PATH;downloadfilename=PATH \n \
-                    file://.* %system.sstate.server.address%/%system.architecture%/sstate-cache/PATH;downloadfilename=PATH \n \
+                    file://.* %system.sstate.server.address%/sturgeon/sstate-cache/PATH;downloadfilename=PATH \n \
+                    file://.* %system.sstate.server.address%/armv7vehf-neon/sstate-cache/PATH;downloadfilename=PATH \n \
                     file://.* %system.sstate.server.address%/allarch/sstate-cache/PATH;downloadfilename=PATH \n \
                     file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \n \
                     "' >> build/conf/local.conf
@@ -110,11 +111,11 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
                     --include '*/' --include '*:*:*:*:*::*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/other-sstate
                 rsync ${'$'}{Opts} \
-                    --include '*/' --include '*:*:*:*:*:%system.MACHINE%:*' --exclude '*' \ 
+                    --include '*/' --include '*:*:*:*:*:sturgeon:*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/%system.MACHINE%
                 rsync ${'$'}{Opts} \
-                    --include '*/' --include '*:*:*:*:*:%system.architecture%:*' --exclude '*' \ 
-                    build/sstate-cache ${'$'}{ServerAddr}/%system.architecture%
+                    --include '*/' --include '*:*:*:*:*:armv7vehf-neon:*' --exclude '*' \ 
+                    build/sstate-cache ${'$'}{ServerAddr}/armv7vehf-neon
                 rsync ${'$'}{Opts} \
                     --include '*/' --include '*:*:*:*:*:allarch:*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/all-arch

@@ -1,7 +1,6 @@
 package asteroid.devices
 
 import asteroid.CoreVCS
-import asteroid.InitWorkspace
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 import jetbrains.buildServer.configs.kotlin.v2019_2.PublishMode
@@ -9,19 +8,17 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.PullRequests
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.commitStatusPublisher
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.pullRequests
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.sshAgent
-import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.SSHUpload
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.sshExec
-import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.sshUpload
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 
-fun makeDeviceProject(device: String): Project {
+fun makeDeviceProject(device: String, architecture: String = "armv7vehf-neon"): Project {
     return Project {
         id("Devices_${device}")
         name = device
-        buildType(BuildImage(device))
-        buildType(BuildImageFromScratch(device))
+        buildType(BuildImage(device,architecture))
+        buildType(BuildImageFromScratch(device,architecture))
     }
 }
 
@@ -29,7 +26,7 @@ fun makeDeviceProject(device: String): Project {
  * Template for device image builder
  */
 // TODO: Add Snapshot dependence
-open class BuildImage(private val device: String) : BuildType({
+open class BuildImage(device: String, architecture: String) : BuildType({
     id("Devices_${device}_BuildImage")
     name = "Build Image"
     description = "Build Asteroid image with latest sstate-cache"
@@ -57,7 +54,7 @@ open class BuildImage(private val device: String) : BuildType({
                 PACKAGE_CLASSES = "package_ipk"
                 SSTATE_MIRRORS ?= " \
                     file://.* %system.sstate.server.address%/${device}/sstate-cache/PATH;downloadfilename=PATH \n \
-                    file://.* %system.sstate.server.address%/%system.architecture%/sstate-cache/PATH;downloadfilename=PATH \n \
+                    file://.* %system.sstate.server.address%/${architecture}/sstate-cache/PATH;downloadfilename=PATH \n \
                     file://.* %system.sstate.server.address%/allarch/sstate-cache/PATH;downloadfilename=PATH \n \
                     file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \n \
                     "' >> build/conf/local.conf
@@ -106,23 +103,6 @@ open class BuildImage(private val device: String) : BuildType({
                 bitbake --ui=teamcity asteroid-image
             """.trimIndent()
         }
-        sshUpload {
-            id = "RUNNER_16"
-            enabled = false
-            transportProtocol = SSHUpload.TransportProtocol.SCP
-            sourcePath = """
-                build/sstate-cache/fedora-35 => other-sstate/sstate-cache/fedora-35
-                build/sstate-cache/**/*:*:*:*:*::* => other-sstate/sstate-cache
-                build/sstate-cache/**/*:*:*:*:*:${device}:* => ${device}/sstate-cache
-                build/sstate-cache/**/*:*:*:*:*:%system.architecture%:* => %system.architecture%/sstate-cache
-                build/sstate-cache/**/*:*:*:*:*:allarch:* => allarch/sstate-cache
-                build/sstate-cache => sstate-cache
-            """.trimIndent()
-            targetUrl = "%system.sstate.server.upload_address%:%system.sstate.server.location%"
-            authMethod = sshAgent {
-                username = "%system.sstate.server.user%"
-            }
-        }
         script {
             name = "Upload sstate-cache"
             id = "RUNNER_21"
@@ -130,7 +110,6 @@ open class BuildImage(private val device: String) : BuildType({
                 Opts="-a --prune-empty-dirs --remove-source-files \ 
                     --checksum --progress"
                 ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:%system.sstate.server.location%"
-                
                 
                 rsync ${'$'}{Opts} \
                     build/sstate-cache/fedora-35 ${'$'}{ServerAddr}/other-sstate/sstate-cache
@@ -141,8 +120,8 @@ open class BuildImage(private val device: String) : BuildType({
                     --include '*/' --include '*:*:*:*:*:${device}:*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/${device}
                 rsync ${'$'}{Opts} \
-                    --include '*/' --include '*:*:*:*:*:%system.architecture%:*' --exclude '*' \ 
-                    build/sstate-cache ${'$'}{ServerAddr}/%system.architecture%
+                    --include '*/' --include '*:*:*:*:*:${architecture}:*' --exclude '*' \ 
+                    build/sstate-cache ${'$'}{ServerAddr}/${architecture}
                 rsync ${'$'}{Opts} \
                     --include '*/' --include '*:*:*:*:*:allarch:*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/all-arch
@@ -241,7 +220,7 @@ open class BuildImage(private val device: String) : BuildType({
 })
 
 // TODO: Add Snapshot dependence
-open class BuildImageFromScratch(private val device: String) : BuildType({
+open class BuildImageFromScratch(device: String, architecture: String) : BuildType({
     id("Devices_${device}_BuildImageFromScratch")
     name = "Build Image (from scratch)"
     description = "Build Asteroid image and update the sstate-cache"
@@ -321,16 +300,20 @@ open class BuildImageFromScratch(private val device: String) : BuildType({
                     --include '*/'  --exclude '*'"
                 ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:/var/www/asteroidos"
                 
-                
-                rsync2 build/sstae-cache/fedora-35 ${'$'}{ServerAddr}/other-sstate/sstate-cache
-                rsync3 --include '*::*' \ 
+                rsync ${'$'}{Opts} \
+                    build/sstate-cache/fedora-35 ${'$'}{ServerAddr}/other-sstate/sstate-cache
+                rsync ${'$'}{Opts} \
+                    --include '*/' --include '*:*:*:*:*::*' --exclude '*' \
                     build/sstate-cache ${'$'}{ServerAddr}/other-sstate
-                rsync3 --include '*:${device}:*' \ 
-                    build/sstate-cache ${'$'}{ServerAddr}/other-sstate
-                rsync3 --include '*:%system.architecture%:*' \ 
-                    build/sstate-cache ${'$'}{ServerAddr}/other-sstate
-                rsync3 --include '*:allarch:*' \ 
-                    build/sstate-cache ${'$'}{ServerAddr}/other-sstate
+                rsync ${'$'}{Opts} \
+                    --include '*/' --include '*:*:*:*:*:${device}:*' --exclude '*' \ 
+                    build/sstate-cache ${'$'}{ServerAddr}/${device}
+                rsync ${'$'}{Opts} \
+                    --include '*/' --include '*:*:*:*:*:${architecture}:*' --exclude '*' \ 
+                    build/sstate-cache ${'$'}{ServerAddr}/${architecture}
+                rsync ${'$'}{Opts} \
+                    --include '*/' --include '*:*:*:*:*:allarch:*' --exclude '*' \ 
+                    build/sstate-cache ${'$'}{ServerAddr}/all-arch
             """.trimIndent()
         }
         script {

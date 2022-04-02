@@ -54,13 +54,6 @@ object AsteroidProject : Project({
             readOnly = true,
             allowEmpty = false
         )
-        select(
-            "system.architecture",
-            "armv7vehf-neon",
-            label = "Architecture",
-            description = "CPU architecture for which to build",
-            options = listOf("ARMv7" to "armv7vehf-neon")
-        )
     }
 
     features {
