@@ -74,6 +74,9 @@
             <Upstream>AsteroidOS</Upstream>
             <Devices>catfish,sturgeon</Devices>
             <Packages>asteroid-alarmclock</Packages>
+            <DeploySstate>true</DeploySstate>
+            <CommitStatus>true</CommitStatus>
+            <PullRequests>true</PullRequests>
           </contextParameters>
         </configuration>
       </plugin>
