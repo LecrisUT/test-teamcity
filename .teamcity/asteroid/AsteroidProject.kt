@@ -1,5 +1,6 @@
 package asteroid
 
+import jetbrains.buildServer.configs.kotlin.v2019_2.DslContext
 import jetbrains.buildServer.configs.kotlin.v2019_2.ErrorConsumer
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.VersionedSettings.BuildSettingsMode.PREFER_SETTINGS_FROM_VCS
@@ -65,12 +66,6 @@ object AsteroidProject : Project({
         activeStorage {
             id = "PROJECT_EXT_6"
             activeStorageID = "DefaultStorage"
-        }
-        versionedSettings {
-            buildSettingsMode = PREFER_SETTINGS_FROM_VCS
-            rootExtId = CoreVCS.TempRepository.id.toString()
-            settingsFormat = KOTLIN
-            storeSecureParamsOutsideOfVcs = true
         }
     }
 }){
