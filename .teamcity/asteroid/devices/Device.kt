@@ -1,6 +1,7 @@
 package asteroid.devices
 
 import asteroid.CoreVCS
+import asteroid.Settings
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 import jetbrains.buildServer.configs.kotlin.v2019_2.PublishMode
@@ -17,8 +18,8 @@ fun makeDeviceProject(device: String, architecture: String = "armv7vehf-neon"): 
     return Project {
         id("Devices_${device}")
         name = device
-        buildType(BuildImage(device,architecture))
-        buildType(BuildImageFromScratch(device,architecture))
+        buildType(BuildImage(device, architecture))
+        buildType(BuildImageFromScratch(device, architecture))
     }
 }
 
@@ -80,16 +81,6 @@ open class BuildImage(device: String, architecture: String) : BuildType({
             """.trimIndent()
         }
         script {
-            name = "Debug filestructure"
-            id = "RUNNER_7"
-            enabled = false
-            scriptContent = """
-                cd build
-                tree
-                tail -n +0 conf/*
-            """.trimIndent()
-        }
-        script {
             name = "Build Image"
             id = "RUNNER_3"
             scriptContent = """
@@ -103,10 +94,11 @@ open class BuildImage(device: String, architecture: String) : BuildType({
                 bitbake --ui=teamcity asteroid-image
             """.trimIndent()
         }
-        script {
-            name = "Upload sstate-cache"
-            id = "RUNNER_21"
-            scriptContent = """
+        if (Settings.deploySstate) {
+            script {
+                name = "Upload sstate-cache"
+                id = "RUNNER_21"
+                scriptContent = """
                 Opts="-a --prune-empty-dirs --remove-source-files \ 
                     --checksum --progress"
                 ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:%system.sstate.server.location%"
@@ -126,16 +118,11 @@ open class BuildImage(device: String, architecture: String) : BuildType({
                     --include '*/' --include '*:*:*:*:*:allarch:*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/all-arch
             """.trimIndent()
+            }
         }
     }
 
     triggers {
-        schedule {
-            id = "TRIGGER_5"
-            enabled = false
-            triggerRules = "+:**"
-            triggerBuild = always()
-        }
         // TODO: Move MetaSmartwatch outside CoreVCS
         vcs {
             id = "TRIGGER_14"
@@ -169,52 +156,58 @@ open class BuildImage(device: String, architecture: String) : BuildType({
     }
 
     features {
-        sshAgent {
-            id = "BUILD_EXT_2"
-            teamcitySshKey = "Sstate Server Key"
-        }
-        pullRequests {
-            id = "BUILD_EXT_1"
-            vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
-            provider = github {
-                authType = token {
-                    token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
-                }
-                filterAuthorRole = PullRequests.GitHubRoleFilter.EVERYBODY
+        if (Settings.deploySstate) {
+            sshAgent {
+                id = "BUILD_EXT_2"
+                teamcitySshKey = "Sstate Server Key"
             }
         }
-        commitStatusPublisher {
-            id = "BUILD_EXT_4"
-            enabled = false
-            vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
-            publisher = github {
-                githubUrl = "https://api.github.com"
-                authType = personalToken {
-                    token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+        if (Settings.pullRequests) {
+            pullRequests {
+                id = "BUILD_EXT_1"
+                vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
+                provider = github {
+                    authType = token {
+                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                    }
+                    filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
                 }
             }
-            param("github_oauth_user", "LecrisUT")
+            pullRequests {
+                id = "BUILD_EXT_7"
+                vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
+                provider = github {
+                    authType = token {
+                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                    }
+                    filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+                }
+            }
         }
-        pullRequests {
-            id = "BUILD_EXT_7"
-            vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
-            provider = github {
-                authType = token {
-                    token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+        if (Settings.commitStatus) {
+            commitStatusPublisher {
+                id = "BUILD_EXT_4"
+                enabled = false
+                vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
+                publisher = github {
+                    githubUrl = "https://api.github.com"
+                    authType = personalToken {
+                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                    }
                 }
-                filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+                param("github_oauth_user", Settings.commitUser)
             }
-        }
-        commitStatusPublisher {
-            id = "BUILD_EXT_5"
-            vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
-            publisher = github {
-                githubUrl = "https://api.github.com"
-                authType = personalToken {
-                    token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+            commitStatusPublisher {
+                id = "BUILD_EXT_5"
+                vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
+                publisher = github {
+                    githubUrl = "https://api.github.com"
+                    authType = personalToken {
+                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                    }
                 }
+                param("github_oauth_user", Settings.commitUser)
             }
-            param("github_oauth_user", "LecrisUT")
         }
     }
 })
@@ -278,26 +271,21 @@ open class BuildImageFromScratch(device: String, architecture: String) : BuildTy
                   asteroid-image
             """.trimIndent()
         }
-        sshExec {
-            name = "Delete old cache"
-            id = "RUNNER_17"
-            enabled = false
-            commands = "rm -r %system.sstate.server.location%/${device}"
-            targetUrl = "%system.sstate.server.upload_address%"
-            authMethod = sshAgent {
-                username = "%system.sstate.server.user%"
+        if (Settings.deploySstate) {
+            sshExec {
+                name = "Delete old cache"
+                id = "RUNNER_17"
+                commands = "rm -r %system.sstate.server.location%/${device}"
+                targetUrl = "%system.sstate.server.upload_address%"
+                authMethod = sshAgent {
+                    username = "%system.sstate.server.user%"
+                }
+                param("teamcitySshKey", "Sstate Server Key")
             }
-            param("teamcitySshKey", "Sstate Server Key")
-        }
-        script {
-            name = "Upload sstate-cache"
-            id = "RUNNER_1"
-            enabled = false
-            scriptContent = """
-                alias rsync2 = "rsync -a --prune-empty-dirs --remove-source-files \ 
-                    --checksum --progress"
-                alias rsync3 = "rsync2 \
-                    --include '*/'  --exclude '*'"
+            script {
+                name = "Upload sstate-cache"
+                id = "RUNNER_1"
+                scriptContent = """
                 ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:/var/www/asteroidos"
                 
                 rsync ${'$'}{Opts} \
@@ -315,6 +303,7 @@ open class BuildImageFromScratch(device: String, architecture: String) : BuildTy
                     --include '*/' --include '*:*:*:*:*:allarch:*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/all-arch
             """.trimIndent()
+            }
         }
         script {
             name = "Compress sstate-cache"
@@ -331,7 +320,7 @@ open class BuildImageFromScratch(device: String, architecture: String) : BuildTy
             id = "TRIGGER_6"
             triggerRules = """
                 +:root=${CoreVCS.MetaSmartwatch.id};comment=^\[Rebuild:(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:**
-                +:root=${CoreVCS.MetaAsteroid.id}:comment=^\[Rebuild:(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:**
+                +:root=${CoreVCS.MetaAsteroid.id};comment=^\[Rebuild:(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:**
             """.trimIndent()
 
             branchFilter = "+:<default>"
@@ -347,9 +336,11 @@ open class BuildImageFromScratch(device: String, architecture: String) : BuildTy
     }
 
     features {
-        sshAgent {
-            id = "BUILD_EXT_6"
-            teamcitySshKey = "Sstate Server Key"
+        if (Settings.deploySstate) {
+            sshAgent {
+                id = "BUILD_EXT_6"
+                teamcitySshKey = "Sstate Server Key"
+            }
         }
     }
 })

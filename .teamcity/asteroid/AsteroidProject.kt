@@ -1,7 +1,6 @@
 package asteroid
 
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
-import jetbrains.buildServer.configs.kotlin.v2019_2.RelativeId
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.activeStorage
 
 object AsteroidProject : Project({
@@ -9,7 +8,7 @@ object AsteroidProject : Project({
 
     // Attach vcsRoots from CoreVCS
     for (vcs in CoreVCS.all())
-        if (vcs.id?.equals(RelativeId("MetaSmartwatchVCS")) == false)
+        if (vcs != CoreVCS.MetaSmartwatch)
             vcsRoot(vcs)
 
     // Attach InitWorkspace build
@@ -17,9 +16,11 @@ object AsteroidProject : Project({
 
     // Attach the subProjects
     // TODO: Link to subprojects externally
-    subProject(asteroid.devices.DevicesProject)
-    subProject(asteroid.packages.PackagesProject)
-    subProject(asteroid.thirdparty.ThirdPartyProject)
+    subProjects(
+        asteroid.devices.DevicesProject,
+        asteroid.packages.PackagesProject,
+        asteroid.thirdparty.ThirdPartyProject
+    )
 
     // Define the build parameters inherited by the subprojects
     params {

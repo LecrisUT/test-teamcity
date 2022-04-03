@@ -1,9 +1,11 @@
 package asteroid.packages.asteroidApps
 
-import asteroid.InitWorkspace
 import asteroid.CoreVCS
-import jetbrains.buildServer.configs.kotlin.v2019_2.*
+import asteroid.Settings
+import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
+import jetbrains.buildServer.configs.kotlin.v2019_2.DslContext
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
+import jetbrains.buildServer.configs.kotlin.v2019_2.VcsRoot
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.PullRequests
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.commitStatusPublisher
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.pullRequests
@@ -41,7 +43,7 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
 
     vcs {
         CoreVCS.attachVCS(this)
-        root(recipeVCS,"+:.=>src/${recipe}")
+        root(recipeVCS, "+:.=>src/${recipe}")
     }
 
     // TODO: Change the hardcoded sturgeon to generic
@@ -96,10 +98,11 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
                   ${recipe}
             """.trimIndent()
         }
-        script {
-            name = "Upload sstate-cache"
-            id = "RUNNER_10"
-            scriptContent = """
+        if (Settings.deploySstate) {
+            script {
+                name = "Upload sstate-cache"
+                id = "RUNNER_10"
+                scriptContent = """
                 Opts="-a --prune-empty-dirs --remove-source-files \ 
                     --checksum --progress"
                 ServerAddr="%system.sstate.server.user%@%system.sstate.server.upload_address%:%system.sstate.server.location%"
@@ -112,7 +115,7 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
                     build/sstate-cache ${'$'}{ServerAddr}/other-sstate
                 rsync ${'$'}{Opts} \
                     --include '*/' --include '*:*:*:*:*:sturgeon:*' --exclude '*' \ 
-                    build/sstate-cache ${'$'}{ServerAddr}/%system.MACHINE%
+                    build/sstate-cache ${'$'}{ServerAddr}/sturgeon
                 rsync ${'$'}{Opts} \
                     --include '*/' --include '*:*:*:*:*:armv7vehf-neon:*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/armv7vehf-neon
@@ -120,6 +123,7 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
                     --include '*/' --include '*:*:*:*:*:allarch:*' --exclude '*' \ 
                     build/sstate-cache ${'$'}{ServerAddr}/all-arch
             """.trimIndent()
+            }
         }
     }
 
@@ -129,16 +133,8 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
             triggerRules = """
                 +:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/recipes-asteroid/%system.recipeName%/**
                 +:root=${CoreVCS.MetaAsteroid.id};comment=^\[%system.recipeName%\][:]:**
+                +:root=${recipeVCS.id};comment=^(?!\[NoBuild\]:).+:**
             """.trimIndent()
-
-            branchFilter = """
-                +:<default>
-                +:pull/*
-            """.trimIndent()
-        }
-        vcs {
-            id = "TRIGGER_16"
-            triggerRules = """+:root=${recipeVCS.id};comment=^(?!\[NoBuild\]:).+:**"""
 
             branchFilter = """
                 +:<default>
@@ -158,49 +154,57 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot) : BuildType({
     }
 
     features {
-        sshAgent {
-            id = "BUILD_EXT_13"
-            teamcitySshKey = "Sstate Server Key"
-        }
-        pullRequests {
-            id = "BUILD_EXT_11"
-            vcsRootExtId = "${recipeVCS.id}"
-            provider = github {
-                authType = token {
-                    token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
-                }
-                filterAuthorRole = PullRequests.GitHubRoleFilter.EVERYBODY
+        if (Settings.deploySstate) {
+            sshAgent {
+                id = "BUILD_EXT_13"
+                teamcitySshKey = "Sstate Server Key"
             }
         }
-        commitStatusPublisher {
-            id = "BUILD_EXT_12"
-            enabled = false
-            vcsRootExtId = "${recipeVCS.id}"
-            publisher = github {
-                githubUrl = "https://api.github.com"
-                authType = personalToken {
-                    token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+        if (Settings.pullRequests) {
+            pullRequests {
+                id = "BUILD_EXT_11"
+                vcsRootExtId = "${recipeVCS.id}"
+                provider = github {
+                    authType = token {
+                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                    }
+                    filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+                }
+            }
+            pullRequests {
+                id = "BUILD_EXT_8"
+                vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
+                provider = github {
+                    authType = token {
+                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                    }
+                    filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
                 }
             }
         }
-        pullRequests {
-            id = "BUILD_EXT_8"
-            vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
-            provider = github {
-                authType = token {
-                    token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+        if (Settings.commitStatus) {
+            commitStatusPublisher {
+                id = "BUILD_EXT_12"
+                enabled = false
+                vcsRootExtId = "${recipeVCS.id}"
+                publisher = github {
+                    githubUrl = "https://api.github.com"
+                    authType = personalToken {
+                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                    }
                 }
-                filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+                param("github_oauth_user", Settings.commitUser)
             }
-        }
-        commitStatusPublisher {
-            id = "BUILD_EXT_9"
-            vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
-            publisher = github {
-                githubUrl = "https://api.github.com"
-                authType = personalToken {
-                    token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+            commitStatusPublisher {
+                id = "BUILD_EXT_9"
+                vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
+                publisher = github {
+                    githubUrl = "https://api.github.com"
+                    authType = personalToken {
+                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                    }
                 }
+                param("github_oauth_user", Settings.commitUser)
             }
         }
     }

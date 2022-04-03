@@ -1,18 +1,15 @@
 package asteroid
 
-import jetbrains.buildServer.configs.kotlin.v2019_2.DslContext
 import jetbrains.buildServer.configs.kotlin.v2019_2.VcsRoot
 import jetbrains.buildServer.configs.kotlin.v2019_2.VcsSettings
 import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
 
 
 object CoreVCS {
-    private var fork = DslContext.getParameter("Fork")
-    private var upstream = DslContext.getParameter("Upstream","AsteroidOS")
     var Asteroid = GitVcsRoot {
         id("AsteroidVCS")
         name = "Asteroid"
-        url = "https://github.com/$fork/asteroid.git"
+        url = "https://github.com/${Settings.fork}/asteroid.git"
         branch = "refs/heads/master"
     }
     var OpenEmbeddedCore = GitVcsRoot {
@@ -48,14 +45,14 @@ object CoreVCS {
     var MetaAsteroid = GitVcsRoot {
         id("MetaAsteroidVCS")
         name = "Meta Asteroid"
-        url = "https://github.com/$upstream/meta-asteroid"
+        url = "https://github.com/${Settings.upstream}/meta-asteroid"
         branch = "refs/heads/master"
     }
     // TODO: Move MetaSmartwatch outside CoreVCS
     var MetaSmartwatch = GitVcsRoot {
         id("MetaSmartwatchVCS")
         name = "Meta Smatwtach"
-        url = "https://github.com/$upstream/meta-smartwatch.git"
+        url = "https://github.com/${Settings.upstream}/meta-smartwatch.git"
         branch = "refs/heads/master"
     }
     // TODO: Switch TempRepository to main asteroid VCS
