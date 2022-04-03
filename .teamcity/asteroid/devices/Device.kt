@@ -168,7 +168,7 @@ open class BuildImage(device: String, architecture: String) : BuildType({
                 vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
                 provider = github {
                     authType = token {
-                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                        token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
                     }
                     filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
                 }
@@ -178,7 +178,7 @@ open class BuildImage(device: String, architecture: String) : BuildType({
                 vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
                 provider = github {
                     authType = token {
-                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                        token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
                     }
                     filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
                 }
@@ -192,7 +192,7 @@ open class BuildImage(device: String, architecture: String) : BuildType({
                 publisher = github {
                     githubUrl = "https://api.github.com"
                     authType = personalToken {
-                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                        token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
                     }
                 }
                 param("github_oauth_user", Settings.commitUser)
@@ -203,7 +203,7 @@ open class BuildImage(device: String, architecture: String) : BuildType({
                 publisher = github {
                     githubUrl = "https://api.github.com"
                     authType = personalToken {
-                        token = "credentialsJSON:ff37fd15-101a-4141-b93e-7d76761e3b8a"
+                        token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
                     }
                 }
                 param("github_oauth_user", Settings.commitUser)
