@@ -21,4 +21,7 @@ object Settings {
     val commitStatus = DslContext.getParameter("CommitStatus", "false").toBoolean()
     val commitUser = DslContext.getParameter("CommitUser", fork)
     val pullRequests = DslContext.getParameter("PullRequests", "false").toBoolean()
+    init {
+        // TODO: Check validity of Token and Ssh key
+    }
 }

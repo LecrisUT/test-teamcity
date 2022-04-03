@@ -64,7 +64,6 @@ object AsteroidProject : Project({
 
     features {
         activeStorage {
-            id = "PROJECT_EXT_6"
             activeStorageID = "DefaultStorage"
         }
     }
