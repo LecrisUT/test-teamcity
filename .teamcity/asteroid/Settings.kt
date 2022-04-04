@@ -13,6 +13,7 @@ object Settings {
 	val devices = DslContext.getParameter("Devices")
 		.split("[\\s,]".toRegex()).toList()
 		.filterNot { it.isEmpty() }
+	val cleanBuilds = DslContext.getParameter("CleanBuilds","false").toBoolean()
 
 	val fork = DslContext.getParameter("Fork")
 	val upstream = DslContext.getParameter("Upstream", "AsteroidOS")
@@ -33,7 +34,9 @@ object Settings {
 
 	// TODO: Change to Github app when available
 	val commitStatus = DslContext.getParameter("CommitStatus", "false").toBoolean()
-	val commitUser = DslContext.getParameter("CommitUser", fork)
+	val commitUser = if (commitStatus)
+		DslContext.getParameter("CommitUser", fork)
+	else ""
 	val pullRequests = DslContext.getParameter("PullRequests", "false").toBoolean()
 
 	init {
