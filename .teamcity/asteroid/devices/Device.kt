@@ -12,7 +12,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.sshAgent
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 
-class DeviceProject(device: String, architecture: String = "armv7vehf-neon") : Project({
+class DeviceProject(val device: String, val architecture: String = "armv7vehf-neon") : Project({
 	id("Devices_${device}")
 	name = device
 }) {
@@ -29,7 +29,6 @@ class DeviceProject(device: String, architecture: String = "armv7vehf-neon") : P
 /**
  * Template for device image builder
  */
-// TODO: Add Snapshot dependence
 open class BuildImage(device: String, architecture: String) : BuildType({
 	id("Devices_${device}_BuildImage")
 	name = "Build Image"
@@ -61,13 +60,10 @@ open class BuildImage(device: String, architecture: String) : BuildType({
 	}
 
 	triggers {
-		// TODO: Move MetaSmartwatch outside CoreVCS
 		vcs {
 			triggerRules = """
                 +:root=${CoreVCS.MetaSmartwatch.id};comment=^(?!\[NoBuild\]:).+:/meta-${device}/**
-                +:root=${CoreVCS.MetaSmartwatch.id};comment=^\[(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:**
-                +:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:**
-                -:root=${CoreVCS.MetaAsteroid.id}:/recipes-asteroid-apps/*
+                +:root=${CoreVCS.MetaSmartwatch.id};comment=^\[(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:/**
             """.trimIndent()
 
 			branchFilter = """

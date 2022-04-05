@@ -1,12 +1,14 @@
 package asteroid.devices
 
-import asteroid.CoreVCS
-import asteroid.Settings
+import asteroid.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
+import jetbrains.buildServer.configs.kotlin.v2019_2.FailureAction
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.PullRequests
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.commitStatusPublisher
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.pullRequests
+import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.sshAgent
+import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.sequential
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
@@ -26,28 +28,113 @@ object DevicesProject : Project({
 	// TODO: Link to root Asteroid Project for external dependence
 
 	// Attach MetaSmartwatch vcs
-	// TODO: Move MetaSmartwatch outside CoreVCS
 	vcsRoot(CoreVCS.MetaSmartwatch)
 
-	buildType(BuildAll)
-	if (Settings.cleanBuilds)
-		buildType(BuildAllFromScratch)
-
-	sequential {
-		parallel {
-			for (device in devices)
-				buildType(device.buildImage)
-		}
+	if (Settings.withSstate) {
+		buildType(BuildBase)
 		buildType(BuildAll)
 	}
-	if (Settings.cleanBuilds)
+	if (Settings.cleanBuilds) {
+		buildType(BuildBaseFromScratch)
+		buildType(BuildAllFromScratch)
+	}
+
+	if (Settings.withSstate) {
 		sequential {
+			buildType(BuildBase)
 			parallel {
 				for (device in devices)
-					buildType(device.buildImageFromScratch)
+					buildType(device.buildImage){
+						onDependencyFailure = FailureAction.CANCEL
+					}
 			}
-			buildType(BuildAllFromScratch)
+			buildType(BuildAll){
+				onDependencyFailure = FailureAction.CANCEL
+			}
 		}
+	}
+	if (Settings.cleanBuilds) {
+		sequential {
+			buildType(BuildBaseFromScratch)
+			parallel {
+				for (device in devices)
+					buildType(device.buildImageFromScratch){
+						onDependencyFailure = FailureAction.CANCEL
+					}
+			}
+			buildType(BuildAllFromScratch){
+				onDependencyFailure = FailureAction.CANCEL
+			}
+		}
+	}
+})
+
+object BuildBase : BuildType({
+	// TODO: Change to generic device
+	id("Devices_BuildBase")
+	name = "Build device base"
+	description = "Build a prototype device with sstate-server"
+
+	vcs {
+		CoreVCS.attachVCS(this)
+	}
+
+	steps {
+		script {
+			initScript(this, "sturgeon", "armv7vehf-neon")
+		}
+		script {
+			name = "Build Image"
+			bitbakeBuild(this)
+		}
+		if (Settings.deploySstate) {
+			script {
+				updateSstate(this, "sturgeon", "armv7vehf-neon")
+			}
+		}
+	}
+
+	features {
+		if (Settings.deploySstate) {
+			sshAgent {
+				teamcitySshKey = "Sstate Server Key"
+			}
+		}
+	}
+})
+
+object BuildBaseFromScratch : BuildType({
+	// TODO: Change to generic device
+	id("Devices_BuildBaseFromScratch")
+	name = "Build device base (from scratch)"
+	description = "Build a prototype device with clean environment"
+
+	vcs {
+		CoreVCS.attachVCS(this,true)
+	}
+
+	steps {
+		script {
+			initScript(this, "sturgeon", "armv7vehf-neon",false)
+		}
+		script {
+			name = "Build Image"
+			bitbakeBuild(this)
+		}
+		if (Settings.deploySstate) {
+			script {
+				updateSstate(this,true)
+			}
+		}
+	}
+
+	features {
+		if (Settings.deploySstate) {
+			sshAgent {
+				teamcitySshKey = "Sstate Server Key"
+			}
+		}
+	}
 })
 
 object BuildAll : BuildType({
@@ -55,11 +142,26 @@ object BuildAll : BuildType({
 	name = "Build all devices"
 	description = "Build Asteroid image for all devices with latest sstate-cache"
 
+	vcs {
+		root(CoreVCS.Asteroid)
+		root(CoreVCS.MetaAsteroid)
+		root(CoreVCS.TempRepository)
+	}
+
 	triggers {
 		vcs {
+			// TODO: Add quiet period
+			watchChangesInDependencies = true
 			triggerRules = """
-                +:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:**
+				+:.
+                +:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/**
                 -:root=${CoreVCS.MetaAsteroid.id}:/recipes-asteroid-apps/*
+				+:root=${CoreVCS.Asteroid.id}:/.teamcity/*
+				-:root=${CoreVCS.Asteroid.id}:/.teamcity/*/**
+				+:root=${CoreVCS.Asteroid.id}:/.teamcity/devices/**
+				+:root=${CoreVCS.TempRepository.id}:/.teamcity/*
+				-:root=${CoreVCS.TempRepository.id}:/.teamcity/*/**
+				+:root=${CoreVCS.TempRepository.id}:/.teamcity/devices/**
             """.trimIndent()
 
 			branchFilter = """
@@ -79,10 +181,39 @@ object BuildAll : BuildType({
 					filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
 				}
 			}
+			pullRequests {
+				vcsRootExtId = "${CoreVCS.Asteroid.id}"
+				provider = github {
+					authType = token {
+						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+					}
+					filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+				}
+			}
 		}
 		if (Settings.commitStatus) {
 			commitStatusPublisher {
 				vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
+				publisher = github {
+					githubUrl = "https://api.github.com"
+					authType = personalToken {
+						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+					}
+				}
+				param("github_oauth_user", Settings.commitUser)
+			}
+			commitStatusPublisher {
+				vcsRootExtId = "${CoreVCS.Asteroid.id}"
+				publisher = github {
+					githubUrl = "https://api.github.com"
+					authType = personalToken {
+						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+					}
+				}
+				param("github_oauth_user", Settings.commitUser)
+			}
+			commitStatusPublisher {
+				vcsRootExtId = "${CoreVCS.TempRepository.id}"
 				publisher = github {
 					githubUrl = "https://api.github.com"
 					authType = personalToken {

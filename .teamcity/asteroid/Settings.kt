@@ -14,6 +14,7 @@ object Settings {
 		.split("[\\s,]".toRegex()).toList()
 		.filterNot { it.isEmpty() }
 	val cleanBuilds = DslContext.getParameter("CleanBuilds","false").toBoolean()
+	val withSstate = DslContext.getParameter("WithSstate","true").toBoolean()
 
 	val fork = DslContext.getParameter("Fork")
 	val upstream = DslContext.getParameter("Upstream", "AsteroidOS")
