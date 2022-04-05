@@ -7,7 +7,7 @@ object Settings {
 		.split("[\\s,]".toRegex()).toList()
 		.filterNot { it.isEmpty() }
 
-	//    val communityPackages = DslContext.getParameter("CommunityPackages")
+//	val communityPackages = DslContext.getParameter("CommunityPackages")
 //        .split("[\\s,]".toRegex()).toList()
 //        .filterNot { it.isEmpty() }
 	val devices = DslContext.getParameter("Devices")

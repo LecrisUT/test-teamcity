@@ -154,20 +154,20 @@ object BuildAll : BuildType({
 			watchChangesInDependencies = true
 			triggerRules = """
 				+:.
-                +:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/**
-                -:root=${CoreVCS.MetaAsteroid.id}:/recipes-asteroid-apps/*
+				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/**
+				-:root=${CoreVCS.MetaAsteroid.id}:/recipes-asteroid-apps/*
 				+:root=${CoreVCS.Asteroid.id}:/.teamcity/*
 				-:root=${CoreVCS.Asteroid.id}:/.teamcity/*/**
 				+:root=${CoreVCS.Asteroid.id}:/.teamcity/devices/**
 				+:root=${CoreVCS.TempRepository.id}:/.teamcity/*
 				-:root=${CoreVCS.TempRepository.id}:/.teamcity/*/**
 				+:root=${CoreVCS.TempRepository.id}:/.teamcity/devices/**
-            """.trimIndent()
+			""".trimIndent()
 
 			branchFilter = """
-                +:<default>
-                +:pull/*
-            """.trimIndent()
+				+:<default>
+				+:pull/*
+			""".trimIndent()
 		}
 	}
 	features {

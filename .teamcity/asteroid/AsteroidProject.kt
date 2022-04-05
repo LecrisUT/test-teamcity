@@ -1,12 +1,8 @@
 package asteroid
 
-import jetbrains.buildServer.configs.kotlin.v2019_2.DslContext
 import jetbrains.buildServer.configs.kotlin.v2019_2.ErrorConsumer
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
-import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.VersionedSettings.BuildSettingsMode.PREFER_SETTINGS_FROM_VCS
-import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.VersionedSettings.Format.KOTLIN
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.activeStorage
-import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.versionedSettings
 
 object AsteroidProject : Project({
 	description = "Base Asteroid Project"

@@ -58,20 +58,20 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot, coreApp: Boolean = t
 	triggers {
 		vcs {
 			val coreAppTrigger = if (coreApp) """
-                +:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/recipes-asteroid/${recipe}/**
-                +:root=${CoreVCS.MetaAsteroid.id};comment=^\[${recipe}\][:]:**
+				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/recipes-asteroid/${recipe}/**
+				+:root=${CoreVCS.MetaAsteroid.id};comment=^\[${recipe}\][:]:**
 			""".trimEnd() else ""
 			triggerRules = """
-                +:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:**
-                -:root=${CoreVCS.MetaAsteroid.id}:/recipes-asteroid/**
+				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:**
+				-:root=${CoreVCS.MetaAsteroid.id}:/recipes-asteroid/**
 				$coreAppTrigger
-                +:root=${recipeVCS.id};comment=^(?!\[NoBuild\]:).+:**
-            """.trimIndent()
+				+:root=${recipeVCS.id};comment=^(?!\[NoBuild\]:).+:**
+			""".trimIndent()
 
 			branchFilter = """
-                +:<default>
-                +:pull/*
-            """.trimIndent()
+				+:<default>
+				+:pull/*
+			""".trimIndent()
 		}
 	}
 

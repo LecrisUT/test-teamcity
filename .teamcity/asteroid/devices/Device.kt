@@ -35,9 +35,9 @@ open class BuildImage(device: String, architecture: String) : BuildType({
 	description = "Build Asteroid image for $device with latest sstate-cache"
 
 	artifactRules = """
-        +:build/tmp-glibc/deploy/images/${device}/asteroid-image-${device}.ext4
-        +:build/tmp-glibc/deploy/images/${device}/zImage-dtb-${device}.fastboot
-    """.trimIndent()
+		+:build/tmp-glibc/deploy/images/${device}/asteroid-image-${device}.ext4
+		+:build/tmp-glibc/deploy/images/${device}/zImage-dtb-${device}.fastboot
+	""".trimIndent()
 	publishArtifacts = PublishMode.SUCCESSFUL
 
 	vcs {
@@ -62,14 +62,14 @@ open class BuildImage(device: String, architecture: String) : BuildType({
 	triggers {
 		vcs {
 			triggerRules = """
-                +:root=${CoreVCS.MetaSmartwatch.id};comment=^(?!\[NoBuild\]:).+:/meta-${device}/**
-                +:root=${CoreVCS.MetaSmartwatch.id};comment=^\[(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:/**
-            """.trimIndent()
+				+:root=${CoreVCS.MetaSmartwatch.id};comment=^(?!\[NoBuild\]:).+:/meta-${device}/**
+				+:root=${CoreVCS.MetaSmartwatch.id};comment=^\[(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:/**
+			""".trimIndent()
 
 			branchFilter = """
-                +:<default>
-                +:pull/*
-            """.trimIndent()
+				+:<default>
+				+:pull/*
+			""".trimIndent()
 		}
 	}
 
@@ -139,17 +139,17 @@ open class BuildImageFromScratch(device: String, architecture: String) : BuildTy
 		script {
 			name = "Compress sstate-cache"
 			scriptContent = """
-                tar -cf sstate-cache-${device}.tar.gz build/sstate-cache
-            """.trimIndent()
+				tar -cf sstate-cache-${device}.tar.gz build/sstate-cache
+			""".trimIndent()
 		}
 	}
 
 	triggers {
 		vcs {
 			triggerRules = """
-                +:root=${CoreVCS.MetaSmartwatch.id};comment=^\[Rebuild:(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:**
-                +:root=${CoreVCS.MetaAsteroid.id};comment=^\[Rebuild:(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:**
-            """.trimIndent()
+				+:root=${CoreVCS.MetaSmartwatch.id};comment=^\[Rebuild:(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:**
+				+:root=${CoreVCS.MetaAsteroid.id};comment=^\[Rebuild:(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:**
+			""".trimIndent()
 
 			branchFilter = "+:<default>"
 		}
