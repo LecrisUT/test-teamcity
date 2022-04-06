@@ -153,9 +153,19 @@ object BuildAll : BuildType({
 			// TODO: Add quiet period
 			watchChangesInDependencies = true
 			triggerRules = """
-				+:.
+				+:/**
+				-:root=${CoreVCS.MetaSmartwatch.id}:/**
 				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/**
 				-:root=${CoreVCS.MetaAsteroid.id}:/recipes-asteroid-apps/*
+			""".trimIndent()
+
+			branchFilter = """
+				+:<default>
+				+:pull/*
+			""".trimIndent()
+		}
+		vcs {
+			triggerRules = """
 				+:root=${CoreVCS.Asteroid.id}:/.teamcity/*
 				-:root=${CoreVCS.Asteroid.id}:/.teamcity/*/**
 				+:root=${CoreVCS.Asteroid.id}:/.teamcity/devices/**
@@ -166,7 +176,6 @@ object BuildAll : BuildType({
 
 			branchFilter = """
 				+:<default>
-				+:pull/*
 			""".trimIndent()
 		}
 	}

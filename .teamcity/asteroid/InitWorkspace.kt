@@ -25,13 +25,13 @@ fun initScript(buildStep: ScriptBuildStep, withSstate: Boolean = true) {
 			  file://.* %system.sstate.server.address%/allarch/sstate-cache/PATH;downloadfilename=PATH \\n \\
 			  file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \n \\
 			"
-		""".trimEnd()
+		""".trimStart().trimEnd()
 	else
 		"""
 			SSTATE_MIRRORS ?= " \\
 			  file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \\n \\
 			"
-		""".trimEnd()
+		""".trimStart().trimEnd()
 	buildStep.scriptContent = """
 		mkdir -p build/conf
 		cat > build/conf/local.conf <<-EOF
@@ -73,13 +73,13 @@ fun initScript(buildStep: ScriptBuildStep, device: String, architecture: String,
 			  file://.* %system.sstate.server.address%/allarch/sstate-cache/PATH;downloadfilename=PATH \\n \\
 			  file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \\n \\
 			"
-		""".trimEnd()
+		""".trimStart().trimEnd()
 	else
 		"""
 			SSTATE_MIRRORS ?= " \\
 			  file://.* %system.sstate.server.address%/other-sstate/sstate-cache/PATH;downloadfilename=PATH \\n \\
 			"
-		""".trimEnd()
+		""".trimStart().trimEnd()
 	buildStep.scriptContent = """
 		mkdir -p build/conf
 		cat > build/conf/local.conf <<-EOF
@@ -129,7 +129,7 @@ fun updateSstate(buildStep: ScriptBuildStep, cleanServer: Boolean = false) {
 			mkdir dummy_empty
 			rsync --delete \
 				./dummy_empty ${'$'}{ServerAddr}
-		""".trimEnd()
+		""".trimStart().trimEnd()
 	else
 		""
 	buildStep.scriptContent = """

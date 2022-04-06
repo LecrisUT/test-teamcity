@@ -60,7 +60,7 @@ open class BuildPackage(recipe: String, recipeVCS: VcsRoot, coreApp: Boolean = t
 			val coreAppTrigger = if (coreApp) """
 				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/recipes-asteroid/${recipe}/**
 				+:root=${CoreVCS.MetaAsteroid.id};comment=^\[${recipe}\][:]:**
-			""".trimEnd() else ""
+			""".trimStart().trimEnd() else ""
 			triggerRules = """
 				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:**
 				-:root=${CoreVCS.MetaAsteroid.id}:/recipes-asteroid/**
