@@ -112,16 +112,57 @@ object CoreVCS {
 			}
 			if (!fallback_url.isNullOrEmpty()) {
 				var testURL = URL(url)
-				var con = testURL.openConnection() as HttpURLConnection
-				if (con.responseCode == 404) {
-					testURL = URL(fallback_url)
-					con = testURL.openConnection() as HttpURLConnection
-				}
-				if (con.responseCode != 200) {
+				try {
+					var con = testURL.openConnection() as HttpURLConnection
+					if (con.responseCode == 404) {
+						testURL = URL(fallback_url)
+						con = testURL.openConnection() as HttpURLConnection
+					}
+					if (con.responseCode != 200) {
 
+					}
+				} catch (err: Exception){
+//					println(err)
 				}
 				url = testURL.toString()
 			}
 		}
 	}
+//	enum class TokenQuery{
+//		PR, Commit
+//	}
+//	fun gitAPIURL(repo: String, type: TokenQuery):String?{
+//		if (repo.contains("https://github.com")){
+//			when (type) {
+//				TokenQuery.PR -> return "$repo/pulls"
+//				TokenQuery.Commit -> return "$repo/checks-runs"
+//			}
+//		}
+//		return null
+//	}
+//	fun checkToken(token: String, repo: String, type: TokenQuery): Boolean{
+//		val apiURL = gitAPIURL(repo,type)
+//		if (apiURL.isNullOrEmpty())
+//			return true
+//		try {
+//			var con = URL(repo).openConnection() as HttpURLConnection
+//			when (type) {
+//				TokenQuery.PR -> {
+//					con.requestMethod = "GET"
+//					con.connect()
+//					if (con.responseCode != 200)
+//						return false
+//				}
+//				TokenQuery.Commit -> {
+//					con.requestMethod = "POST"
+//					con.connect()
+//					if (con.responseCode != 422)
+//						return false
+//				}
+//			}
+//		} catch (err: Exception){
+////			println(err)
+//		}
+//		return true
+//	}
 }
