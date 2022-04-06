@@ -3,13 +3,17 @@ package asteroid
 import jetbrains.buildServer.configs.kotlin.v2019_2.VcsRoot
 import jetbrains.buildServer.configs.kotlin.v2019_2.VcsSettings
 import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 object CoreVCS {
-	var Asteroid = GitVcsRoot {
+	var Asteroid = GitVcsRoot_fallback {
 		id("AsteroidVCS")
 		name = "Asteroid"
-		url = "https://github.com/${Settings.fork}/asteroid.git"
+		gitBase = "https://github.com/"
+		url = "${Settings.fork}/asteroid.git"
+		fallback_url = "${Settings.upstream}/asteroid.git"
 		branch = "refs/heads/master"
 	}
 	var OpenEmbeddedCore = GitVcsRoot {
@@ -42,19 +46,25 @@ object CoreVCS {
 		url = "https://github.com/shr-distribution/meta-smartphone"
 		branch = "refs/heads/honister"
 	}
-	var MetaAsteroid = GitVcsRoot {
+	var MetaAsteroid = GitVcsRoot_fallback {
 		id("MetaAsteroidVCS")
 		name = "Meta Asteroid"
-		url = "https://github.com/${Settings.upstream}/meta-asteroid"
+		gitBase = "https://github.com/"
+		url = "${Settings.fork}/meta-asteroid"
+		fallback_url = "${Settings.upstream}/meta-asteroid"
 		branch = "refs/heads/master"
 	}
+
 	// TODO: Move MetaSmartwatch outside CoreVCS
-	var MetaSmartwatch = GitVcsRoot {
+	var MetaSmartwatch = GitVcsRoot_fallback {
 		id("MetaSmartwatchVCS")
 		name = "Meta Smatwtach"
-		url = "https://github.com/${Settings.upstream}/meta-smartwatch.git"
+		gitBase = "https://github.com/"
+		url = "${Settings.fork}/meta-smartwatch.git"
+		fallback_url = "${Settings.upstream}/meta-smartwatch.git"
 		branch = "refs/heads/master"
 	}
+
 	// TODO: Switch TempRepository to main asteroid VCS
 	var TempRepository = GitVcsRoot {
 		id("SettingsVCS")
@@ -62,7 +72,8 @@ object CoreVCS {
 		url = "https://github.com/LecrisUT/test-teamcity"
 		branch = "refs/heads/lecris.dev"
 	}
-	fun all(): List<VcsRoot>{
+
+	fun all(): List<VcsRoot> {
 		return listOf(
 			Asteroid,
 			OpenEmbeddedCore,
@@ -75,6 +86,7 @@ object CoreVCS {
 			TempRepository
 		)
 	}
+
 	fun attachVCS(init: VcsSettings, forDevice: Boolean = false) {
 		init.root(OpenEmbeddedCore, "+:.=>src/oe-core")
 		init.root(Bitbake, "+:.=>src/oe-core/bitbake")
@@ -86,5 +98,30 @@ object CoreVCS {
 			init.root(MetaSmartwatch, "+:.=>src/meta-smartwatch")
 
 		init.cleanCheckout = true
+	}
+
+	open class GitVcsRoot_fallback(init: GitVcsRoot_fallback.() -> Unit) : GitVcsRoot() {
+		var gitBase: String? = null
+		var fallback_url: String? = null
+		init {
+			init.invoke(this)
+			if (!gitBase.isNullOrEmpty()){
+				url = gitBase + url
+				if (!fallback_url.isNullOrEmpty())
+					fallback_url = gitBase + fallback_url
+			}
+			if (!fallback_url.isNullOrEmpty()) {
+				var testURL = URL(url)
+				var con = testURL.openConnection() as HttpURLConnection
+				if (con.responseCode == 404) {
+					testURL = URL(fallback_url)
+					con = testURL.openConnection() as HttpURLConnection
+				}
+				if (con.responseCode != 200) {
+
+				}
+				url = testURL.toString()
+			}
+		}
 	}
 }

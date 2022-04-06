@@ -10,18 +10,20 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.pullRequests
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.sshAgent
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
-import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
 
 class PackageProject(val recipe: String, recipeVCSroot: VcsRoot? = null) : Project({
 	id("Packages_AsteroidApps_${recipe.filter { it.isLetterOrDigit() }}")
 	name = recipe
 }) {
-	val recipeVCS = recipeVCSroot ?: GitVcsRoot {
+	val default_recipeVCS = CoreVCS.GitVcsRoot_fallback {
 		id("Packages_AsteroidApps_${this@PackageProject.recipe.filter { it.isLetterOrDigit() }}VCS")
 		name = "${this@PackageProject.recipe} Source"
-		url = "https://github.com/${Settings.fork}/${this@PackageProject.recipe}.git"
+		gitBase = "https://github.com/"
+		url = "${Settings.fork}/${this@PackageProject.recipe}.git"
+		fallback_url = "${Settings.upstream}/${this@PackageProject.recipe}.git"
 		branch = "refs/heads/master"
 	}
+	val recipeVCS = recipeVCSroot ?: default_recipeVCS
 	val buildPackage = BuildPackage(recipe, recipeVCS)
 
 	init {
