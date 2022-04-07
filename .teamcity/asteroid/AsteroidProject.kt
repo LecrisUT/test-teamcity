@@ -36,42 +36,30 @@ object AsteroidProject : Project({
 		if (Settings.deploySstate) {
 			text(
 				"system.sstate.server.location",
-				Settings.sstateServer.location ?: "",
+				Settings.sstateServer.location,
 				label = "Sstate server location",
 				description = "Path location of the sstate-cache",
 				readOnly = true, allowEmpty = true
 			)
 			text(
 				"system.sstate.server.user",
-				Settings.sstateServer.user ?: "",
+				Settings.sstateServer.user,
 				label = "SState server user",
 				description = "Username used to upload sstate-cache",
 				readOnly = true, allowEmpty = true
 			)
 			text(
 				"system.sstate.server.upload_address",
-				Settings.sstateServer.backendUrl ?: "",
+				Settings.sstateServer.backendUrl,
 				label = "SState server backend address",
 				description = "Backend address to upload the sstate-cache",
 				readOnly = true, allowEmpty = false
 			)
 		}
 	}
-
 	features {
 		activeStorage {
 			activeStorageID = "DefaultStorage"
 		}
 	}
-}) {
-	override fun validate(consumer: ErrorConsumer) {
-		super.validate(consumer)
-		if (Settings.deploySstate) {
-			// TODO: check that SSH key is present
-			//  Currently this feature is unavailable
-		}
-		if (Settings.pullRequests || Settings.commitStatus) {
-			// TODO: check that SSH key and and OAuth token are present
-		}
-	}
-}
+})

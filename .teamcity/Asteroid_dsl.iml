@@ -76,5 +76,9 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-script-runtime:1.5.31" level="project" />
+    <orderEntry type="library" name="Maven: com.github.kittinunf.fuel:fuel:2.3.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.kittinunf.result:result:3.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.kittinunf.fuel:fuel-json:2.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20200518" level="project" />
   </component>
 </module>

@@ -1,6 +1,7 @@
 package asteroid.devices
 
 import asteroid.*
+import asteroid.CoreVCS.GitAPIChecker
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
 import jetbrains.buildServer.configs.kotlin.v2019_2.FailureAction
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
@@ -44,11 +45,11 @@ object DevicesProject : Project({
 			buildType(BuildBase)
 			parallel {
 				for (device in devices)
-					buildType(device.buildImage){
+					buildType(device.buildImage) {
 						onDependencyFailure = FailureAction.CANCEL
 					}
 			}
-			buildType(BuildAll){
+			buildType(BuildAll) {
 				onDependencyFailure = FailureAction.CANCEL
 			}
 		}
@@ -58,11 +59,11 @@ object DevicesProject : Project({
 			buildType(BuildBaseFromScratch)
 			parallel {
 				for (device in devices)
-					buildType(device.buildImageFromScratch){
+					buildType(device.buildImageFromScratch) {
 						onDependencyFailure = FailureAction.CANCEL
 					}
 			}
-			buildType(BuildAllFromScratch){
+			buildType(BuildAllFromScratch) {
 				onDependencyFailure = FailureAction.CANCEL
 			}
 		}
@@ -110,12 +111,12 @@ object BuildBaseFromScratch : BuildType({
 	description = "Build a prototype device with clean environment"
 
 	vcs {
-		CoreVCS.attachVCS(this,true)
+		CoreVCS.attachVCS(this, true)
 	}
 
 	steps {
 		script {
-			initScript(this, "sturgeon", "armv7vehf-neon",false)
+			initScript(this, "sturgeon", "armv7vehf-neon", false)
 		}
 		script {
 			name = "Build Image"
@@ -123,7 +124,7 @@ object BuildBaseFromScratch : BuildType({
 		}
 		if (Settings.deploySstate) {
 			script {
-				updateSstate(this,true)
+				updateSstate(this, true)
 			}
 		}
 	}
@@ -180,57 +181,88 @@ object BuildAll : BuildType({
 		}
 	}
 	features {
+		var gitChecker: GitAPIChecker?
 		if (Settings.pullRequests) {
-			pullRequests {
-				vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
-				provider = github {
-					authType = token {
-						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+			gitChecker = GitAPIChecker.Create(CoreVCS.MetaAsteroid.url!!, Settings.GithubTokenID)
+			if (gitChecker?.checkPR() == true)
+				pullRequests {
+					vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
+					when (gitChecker!!.hubType) {
+						CoreVCS.GitRepoHubType.Github -> {
+							provider = github {
+								authType = token {
+									token = Settings.GithubTokenID
+								}
+								filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+							}
+						}
 					}
-					filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
 				}
-			}
-			pullRequests {
-				vcsRootExtId = "${CoreVCS.Asteroid.id}"
-				provider = github {
-					authType = token {
-						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+			gitChecker = GitAPIChecker.Create(CoreVCS.Asteroid.url!!, Settings.GithubTokenID)
+			if (gitChecker?.checkPR() == true)
+				pullRequests {
+					vcsRootExtId = "${CoreVCS.Asteroid.id}"
+					when (gitChecker!!.hubType) {
+						CoreVCS.GitRepoHubType.Github -> {
+							provider = github {
+								authType = token {
+									token = Settings.GithubTokenID
+								}
+								filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+							}
+						}
 					}
-					filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
 				}
-			}
 		}
 		if (Settings.commitStatus) {
-			commitStatusPublisher {
-				vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
-				publisher = github {
-					githubUrl = "https://api.github.com"
-					authType = personalToken {
-						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+			gitChecker = GitAPIChecker.Create(CoreVCS.MetaAsteroid.url!!, Settings.GithubTokenID)
+			if (gitChecker?.checkCommitStatus() == true)
+				commitStatusPublisher {
+					vcsRootExtId = "${CoreVCS.MetaAsteroid.id}"
+					when (gitChecker!!.hubType) {
+						CoreVCS.GitRepoHubType.Github -> {
+							publisher = github {
+								githubUrl = "https://api.github.com"
+								authType = personalToken {
+									token = Settings.GithubTokenID
+								}
+							}
+							param("github_oauth_user", gitChecker!!.commitUser)
+						}
 					}
 				}
-				param("github_oauth_user", Settings.commitUser)
-			}
-			commitStatusPublisher {
-				vcsRootExtId = "${CoreVCS.Asteroid.id}"
-				publisher = github {
-					githubUrl = "https://api.github.com"
-					authType = personalToken {
-						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+			gitChecker = GitAPIChecker.Create(CoreVCS.Asteroid.url!!, Settings.GithubTokenID)
+			if (gitChecker?.checkCommitStatus() == true)
+				commitStatusPublisher {
+					vcsRootExtId = "${CoreVCS.Asteroid.id}"
+					when (gitChecker!!.hubType) {
+						CoreVCS.GitRepoHubType.Github -> {
+							publisher = github {
+								githubUrl = "https://api.github.com"
+								authType = personalToken {
+									token = Settings.GithubTokenID
+								}
+							}
+							param("github_oauth_user", gitChecker!!.commitUser)
+						}
 					}
 				}
-				param("github_oauth_user", Settings.commitUser)
-			}
-			commitStatusPublisher {
-				vcsRootExtId = "${CoreVCS.TempRepository.id}"
-				publisher = github {
-					githubUrl = "https://api.github.com"
-					authType = personalToken {
-						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+			gitChecker = GitAPIChecker.Create(CoreVCS.TempRepository.url!!, Settings.GithubTokenID)
+			if (gitChecker?.checkCommitStatus() == true)
+				commitStatusPublisher {
+					vcsRootExtId = "${CoreVCS.TempRepository.id}"
+					when (gitChecker!!.hubType) {
+						CoreVCS.GitRepoHubType.Github -> {
+							publisher = github {
+								githubUrl = "https://api.github.com"
+								authType = personalToken {
+									token = Settings.GithubTokenID
+								}
+							}
+							param("github_oauth_user", gitChecker!!.commitUser)
+						}
 					}
 				}
-				param("github_oauth_user", Settings.commitUser)
-			}
 		}
 	}
 })

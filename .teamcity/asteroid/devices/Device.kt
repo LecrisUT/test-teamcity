@@ -1,8 +1,8 @@
 package asteroid.devices
 
 import asteroid.*
+import asteroid.CoreVCS.GitAPIChecker
 import jetbrains.buildServer.configs.kotlin.v2019_2.BuildType
-import jetbrains.buildServer.configs.kotlin.v2019_2.ErrorConsumer
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 import jetbrains.buildServer.configs.kotlin.v2019_2.PublishMode
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.PullRequests
@@ -79,38 +79,45 @@ open class BuildImage(device: String, architecture: String) : BuildType({
 				teamcitySshKey = "Sstate Server Key"
 			}
 		}
+		var gitChecker: GitAPIChecker?
 		if (Settings.pullRequests) {
-			pullRequests {
-				vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
-				provider = github {
-					authType = token {
-						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+			gitChecker = GitAPIChecker.Create(CoreVCS.MetaAsteroid.url!!, Settings.GithubTokenID)
+			if (gitChecker?.checkPR() == true)
+				pullRequests {
+					vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
+					when (gitChecker!!.hubType) {
+						CoreVCS.GitRepoHubType.Github -> {
+							provider = github {
+								authType = token {
+									token = Settings.GithubTokenID
+								}
+								filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
+							}
+						}
 					}
-					filterAuthorRole = PullRequests.GitHubRoleFilter.MEMBER_OR_COLLABORATOR
 				}
-			}
 		}
 		if (Settings.commitStatus) {
-			commitStatusPublisher {
-				vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
-				publisher = github {
-					githubUrl = "https://api.github.com"
-					authType = personalToken {
-						token = "credentialsJSON:0b803d82-f0a8-42ee-b8f9-0fca109a14ab"
+			gitChecker = GitAPIChecker.Create(CoreVCS.MetaAsteroid.url!!, Settings.GithubTokenID)
+			if (gitChecker?.checkCommitStatus() == true)
+				commitStatusPublisher {
+					vcsRootExtId = "${CoreVCS.MetaSmartwatch.id}"
+					when (gitChecker!!.hubType) {
+						CoreVCS.GitRepoHubType.Github -> {
+							publisher = github {
+								githubUrl = "https://api.github.com"
+								authType = personalToken {
+									token = Settings.GithubTokenID
+								}
+							}
+							param("github_oauth_user", gitChecker!!.commitUser)
+						}
 					}
 				}
-				param("github_oauth_user", Settings.commitUser)
-			}
 		}
 	}
-}) {
-	override fun validate(consumer: ErrorConsumer) {
-		super.validate(consumer)
-		// TODO: Validate that Github token works
-	}
-}
+})
 
-// TODO: Add Snapshot dependence
 open class BuildImageFromScratch(device: String, architecture: String) : BuildType({
 	id("Devices_${device}_BuildImageFromScratch")
 	name = "Build Image (from scratch)"

@@ -1,10 +1,12 @@
 package asteroid
 
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.Headers
+import com.github.kittinunf.fuel.core.extensions.jsonBody
+import com.github.kittinunf.fuel.json.responseJson
 import jetbrains.buildServer.configs.kotlin.v2019_2.VcsRoot
 import jetbrains.buildServer.configs.kotlin.v2019_2.VcsSettings
 import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 object CoreVCS {
@@ -103,66 +105,156 @@ object CoreVCS {
 	open class GitVcsRoot_fallback(init: GitVcsRoot_fallback.() -> Unit) : GitVcsRoot() {
 		var gitBase: String? = null
 		var fallback_url: String? = null
+
 		init {
 			init.invoke(this)
-			if (!gitBase.isNullOrEmpty()){
+			if (!gitBase.isNullOrEmpty()) {
 				url = gitBase + url
 				if (!fallback_url.isNullOrEmpty())
 					fallback_url = gitBase + fallback_url
-			}
-			if (!fallback_url.isNullOrEmpty()) {
-				var testURL = URL(url)
-				try {
-					var con = testURL.openConnection() as HttpURLConnection
-					if (con.responseCode == 404) {
-						testURL = URL(fallback_url)
-						con = testURL.openConnection() as HttpURLConnection
+			} else if (!fallback_url.isNullOrEmpty()) {
+				if (Settings.canHttp) {
+					var testURL: String = url ?: ""
+					var code = Fuel.get(testURL).response().second.statusCode
+					if (code == 404) {
+						testURL = fallback_url ?: ""
+						code = Fuel.get(testURL).response().second.statusCode
 					}
-					if (con.responseCode != 200) {
-
+					if (code != 200) {
+						// TODO: Resolve other excetions
 					}
-				} catch (err: Exception){
-//					println(err)
-				}
-				url = testURL.toString()
+					url = testURL
+				} else
+					url = fallback_url
 			}
 		}
 	}
-//	enum class TokenQuery{
-//		PR, Commit
-//	}
-//	fun gitAPIURL(repo: String, type: TokenQuery):String?{
-//		if (repo.contains("https://github.com")){
-//			when (type) {
-//				TokenQuery.PR -> return "$repo/pulls"
-//				TokenQuery.Commit -> return "$repo/checks-runs"
-//			}
-//		}
-//		return null
-//	}
-//	fun checkToken(token: String, repo: String, type: TokenQuery): Boolean{
-//		val apiURL = gitAPIURL(repo,type)
-//		if (apiURL.isNullOrEmpty())
-//			return true
-//		try {
-//			var con = URL(repo).openConnection() as HttpURLConnection
-//			when (type) {
-//				TokenQuery.PR -> {
-//					con.requestMethod = "GET"
-//					con.connect()
-//					if (con.responseCode != 200)
-//						return false
-//				}
-//				TokenQuery.Commit -> {
-//					con.requestMethod = "POST"
-//					con.connect()
-//					if (con.responseCode != 422)
-//						return false
-//				}
-//			}
-//		} catch (err: Exception){
-////			println(err)
-//		}
-//		return true
-//	}
+
+	enum class GitRepoHubType {
+		Github
+	}
+
+	interface GitAPIChecker {
+		val repo: String
+		val token: String
+		val hubType: GitRepoHubType
+		val commitUser: String
+		fun checkCommitStatus(): Boolean
+		fun checkPR(): Boolean
+		fun checkToken(): Boolean
+
+		companion object {
+			fun Create(repo: String, token: String): GitAPIChecker? {
+				with(repo) {
+					when {
+						contains("https://github.com") -> return GithubAPIChecker(repo, token)
+						else -> return null
+					}
+				}
+			}
+		}
+
+		open class GithubAPIChecker(override val repo: String, override val token: String) : GitAPIChecker {
+			override val hubType = GitRepoHubType.Github
+			override val commitUser = Settings.commitUser
+			val repoAPIBase = repo.removeSuffix(".git")
+				.replace("https://github.com", "https://api.github.com/repos")
+
+			override fun checkToken(): Boolean {
+				// Cannot check if sandboxing is enabled or the token is not plain-text
+				if (!Settings.canHttp || token.startsWith("credentialsJSON:"))
+					return false
+				val request = Fuel.get("https://api.github.com")
+					.appendHeader(Headers.AUTHORIZATION, "token $token")
+				return when (request.response().second.statusCode) {
+					401 -> false
+					200 -> true
+					else -> {
+						// TODO: Add warning
+						false
+					}
+				}
+			}
+
+			override fun checkCommitStatus(): Boolean {
+				// Cannot check if sandboxing is enabled or the token is not plain-text
+				if (!Settings.canHttp || token.startsWith("credentialsJSON:"))
+					return true
+				// If token is invalid throw warning
+				if (!checkToken()) {
+					// TODO: add warning
+					return false
+				}
+
+				var request = Fuel.get("$repoAPIBase/commits/HEAD/status")
+					.appendHeader(Headers.AUTHORIZATION, "token $token")
+				var response = request.responseJson()
+				when (response.second.statusCode) {
+					// Token cannot access private repo
+					404 -> return false
+					// Token does not have repo:status:read access to the repo
+					403 -> return false
+					// Token has at least repo:status:read access to the repo
+					200 -> {}
+					else -> {
+						// Unknown states
+						// TODO: Add warning
+						return false
+					}
+				}
+				val sha = response.third.component1()!!.obj()["sha"].toString()
+				request = Fuel.post("$repoAPIBase/commits/$sha/statuses")
+					.appendHeader(Headers.AUTHORIZATION, "token $token")
+					.jsonBody(
+						"""
+						{
+							"context": "test-connection",
+							"state": "dummy"
+						}
+					""".trimIndent()
+					)
+				response = request.responseJson()
+				return when (response.second.statusCode) {
+					// Token does not have repo:status:write access to the repo
+					403 -> false
+					// Token has repo:status:write access but we made ill-formed content
+					422 -> true
+					// Created status. This should not have occured
+					201 -> {
+						// TODO: Add warning
+						true
+					}
+					// Unknown
+					else -> false
+				}
+			}
+
+			override fun checkPR(): Boolean {
+				// Cannot check if sandboxing is enabled or the token is not plain-text
+				if (!Settings.canHttp || token.startsWith("credentialsJSON:"))
+					return true
+				// If token is invalid throw warning
+				if (!checkToken()) {
+					// TODO: add warning
+					return false
+				}
+
+				val request = Fuel.get("$repoAPIBase/pulls")
+					.appendHeader(Headers.AUTHORIZATION, "token $token")
+				return when (request.response().second.statusCode) {
+					// Token cannot access private repo
+					404 -> false
+					// Token does not have repo:status:read access to the repo
+					403 -> false
+					// Token has at least repo:status:read access to the repo
+					200 -> true
+					else -> {
+						// Unknown states
+						// TODO: Add warning
+						false
+					}
+				}
+			}
+		}
+	}
 }
