@@ -77,7 +77,7 @@ object BuildBase : BuildType({
 	description = "Build a prototype device with sstate-server"
 
 	vcs {
-		CoreVCS.attachVCS(this)
+		CoreVCS.attachVCS(this, true)
 	}
 
 	steps {
