@@ -112,7 +112,8 @@ object CoreVCS {
 				url = gitBase + url
 				if (!fallback_url.isNullOrEmpty())
 					fallback_url = gitBase + fallback_url
-			} else if (!fallback_url.isNullOrEmpty()) {
+			}
+			if (!fallback_url.isNullOrEmpty()) {
 				if (Settings.canHttp) {
 					var testURL: String = url ?: ""
 					var code = Fuel.get(testURL).response().second.statusCode
