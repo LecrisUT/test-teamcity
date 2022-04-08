@@ -55,6 +55,7 @@ fun initScript(buildStep: ScriptBuildStep, withSstate: Boolean = true) {
 			  \${'$'}{SRCDIR}/meta-smartphone/meta-android \\
 			  \${'$'}{SRCDIR}/meta-openembedded/meta-python \\
 			  \${'$'}{SRCDIR}/meta-openembedded/meta-filesystems \\
+			  \${'$'}{SRCDIR}/meta-smartwatch/meta-sturgeon \\
 			"
 		EOF
 		
@@ -63,7 +64,13 @@ fun initScript(buildStep: ScriptBuildStep, withSstate: Boolean = true) {
 		""".trimIndent()
 }
 
-fun initScript(buildStep: ScriptBuildStep, device: String, architecture: String, withSstate: Boolean = true) {
+fun initScript(
+	buildStep: ScriptBuildStep,
+	device: String,
+	architecture: String = "armv7vehf-neon",
+	meta: String = device,
+	withSstate: Boolean = true
+) {
 	buildStep.name = "Prepare config files"
 	val sstateMirror: String = if (withSstate)
 		"""
@@ -103,7 +110,7 @@ fun initScript(buildStep: ScriptBuildStep, device: String, architecture: String,
 			  \${'$'}{SRCDIR}/meta-smartphone/meta-android \\
 			  \${'$'}{SRCDIR}/meta-openembedded/meta-python \\
 			  \${'$'}{SRCDIR}/meta-openembedded/meta-filesystems \\
-			  \${'$'}{SRCDIR}/meta-smartwatch/meta-${device} \\
+			  \${'$'}{SRCDIR}/meta-smartwatch/meta-$meta \\
 			"
 		EOF
 		
@@ -116,7 +123,7 @@ fun bitbakeBuild(buildStep: ScriptBuildStep, recipe: String? = null) {
 	buildStep.scriptContent = """
 		source ./src/oe-core/oe-init-build-env > /dev/null
 		echo "Starting bitbake"
-		bitbake --ui=teamcity ${recipe ?: "asteroid-image"}
+		bitbake --ui=teamcity ${recipe ?: "asteroid-image%system.image.dev-suffix%"}
 	""".trimIndent()
 }
 

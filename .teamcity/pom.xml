@@ -79,11 +79,12 @@
                     <contextParameters>
                         <Fork>AsteroidOS</Fork>
                         <Upstream>AsteroidOS</Upstream>
-                        <Devices>catfish,sturgeon</Devices>
-                        <Packages>asteroid-alarmclock</Packages>
+                        <Devices>catfish,harmony</Devices>
+                        <Packages>asteroid-alarmclock,asteroid-icons</Packages>
                         <DeploySstate>true</DeploySstate>
                         <CommitStatus>true</CommitStatus>
                         <PullRequests>true</PullRequests>
+                        <CleanBuilds>true</CleanBuilds>
                     </contextParameters>
                 </configuration>
             </plugin>

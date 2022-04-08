@@ -12,35 +12,41 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
 
-class PackageProject(val recipe: String, recipeVCSroot: GitVcsRoot? = null) : Project({
-	id("Packages_AsteroidApps_${recipe.filter { it.isLetterOrDigit() }}")
-	name = recipe
+class PackageProject(val pkg: String) : Project({
+	id("Packages_AsteroidApps_${pkg.filter { it.isLetterOrDigit() }}")
+	name = pkg
 }) {
-	val default_recipeVCS = CoreVCS.GitVcsRoot_fallback {
-		id("Packages_AsteroidApps_${this@PackageProject.recipe.filter { it.isLetterOrDigit() }}VCS")
-		name = "${this@PackageProject.recipe} Source"
-		gitBase = "https://github.com/"
-		url = "${Settings.fork}/${this@PackageProject.recipe}.git"
-		fallback_url = "${Settings.upstream}/${this@PackageProject.recipe}.git"
-		branch = "refs/heads/master"
-	}
-	val recipeVCS = recipeVCSroot ?: default_recipeVCS
-	val buildPackage = BuildPackage(recipe, recipeVCS)
+
+	val recipeVCS: GitVcsRoot
+	val buildPackage: BuildPackage
+	val recipe: String
 
 	init {
+		val json = Settings.overrides?.optJSONObject("packages")?.optJSONObject(pkg)
+		val gitName = json?.optString("gitName") ?: pkg
+		recipe = json?.optString("recipe") ?: pkg
+		recipeVCS = CoreVCS.GitVcsRoot_fallback {
+			id("Packages_AsteroidApps_${this@PackageProject.pkg.filter { it.isLetterOrDigit() }}VCS")
+			name = "${this@PackageProject.pkg} Source"
+			gitBase = "https://github.com/"
+			url = "${Settings.fork}/$gitName.git"
+			fallback_url = "${Settings.upstream}/$gitName.git"
+			branch = "refs/heads/master"
+		}
+		buildPackage = BuildPackage(pkg, recipeVCS, recipe)
+		buildPackage.vcs.root(recipeVCS, "+:.=>src/$gitName")
 		vcsRoot(recipeVCS)
 		buildType(buildPackage)
 	}
 }
 
-open class BuildPackage(recipe: String, recipeVCS: GitVcsRoot, coreApp: Boolean = true) : BuildType({
+open class BuildPackage(pkg: String, recipeVCS: GitVcsRoot, recipe: String = pkg, coreApp: Boolean = true) : BuildType({
 	id("Packages_AsteroidApps_${recipe.filter { it.isLetterOrDigit() }}_BuildPackage")
 	name = "Build Package"
 	description = "Build a specific recipe"
 
 	vcs {
-		CoreVCS.attachVCS(this)
-		root(recipeVCS, "+:.=>src/${recipe}")
+		CoreVCS.attachVCS(this, true)
 	}
 
 	steps {
@@ -61,8 +67,8 @@ open class BuildPackage(recipe: String, recipeVCS: GitVcsRoot, coreApp: Boolean 
 	triggers {
 		vcs {
 			val coreAppTrigger = if (coreApp) """
-				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/recipes-asteroid/${recipe}/**
-				+:root=${CoreVCS.MetaAsteroid.id};comment=^\[${recipe}\][:]:**
+				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:/recipes-asteroid/$pkg/**
+				+:root=${CoreVCS.MetaAsteroid.id};comment=^\[$pkg\][:]:**
 			""".trimStart().trimEnd() else ""
 			triggerRules = """
 				+:root=${CoreVCS.MetaAsteroid.id};comment=^(?!\[NoBuild\]:).+:**

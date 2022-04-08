@@ -68,6 +68,15 @@ object DevicesProject : Project({
 			}
 		}
 	}
+	params {
+		text(
+			"system.image.dev-suffix",
+			"",
+			"Development suffix",
+			"Recipe suffix to build development or debug version",
+			readOnly = false, allowEmpty = true
+		)
+	}
 })
 
 object BuildBase : BuildType({
@@ -82,7 +91,7 @@ object BuildBase : BuildType({
 
 	steps {
 		script {
-			initScript(this, "sturgeon", "armv7vehf-neon")
+			initScript(this)
 		}
 		script {
 			name = "Build Image"
@@ -116,7 +125,7 @@ object BuildBaseFromScratch : BuildType({
 
 	steps {
 		script {
-			initScript(this, "sturgeon", "armv7vehf-neon", false)
+			initScript(this, false)
 		}
 		script {
 			name = "Build Image"

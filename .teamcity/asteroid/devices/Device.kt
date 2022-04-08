@@ -12,14 +12,21 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.buildFeatures.sshAgent
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 
-class DeviceProject(val device: String, val architecture: String = "armv7vehf-neon") : Project({
+class DeviceProject(val device: String) : Project({
 	id("Devices_${device}")
 	name = device
 }) {
-	val buildImage = BuildImage(device, architecture)
-	val buildImageFromScratch = BuildImageFromScratch(device, architecture)
+	val buildImage: BuildType
+	val buildImageFromScratch: BuildType
+	val architecture: String
+	val meta: String
 
 	init {
+		val json = Settings.overrides?.optJSONObject("devices")?.optJSONObject(device)
+		meta = json?.optString("meta") ?: device
+		architecture = json?.optString("architecture") ?: "armv7vehf-neon"
+		buildImage = BuildImage(device, architecture, meta)
+		buildImageFromScratch = BuildImageFromScratch(device, architecture, meta)
 		buildType(buildImage)
 		if (Settings.cleanBuilds)
 			buildType(buildImageFromScratch)
@@ -29,24 +36,27 @@ class DeviceProject(val device: String, val architecture: String = "armv7vehf-ne
 /**
  * Template for device image builder
  */
-open class BuildImage(device: String, architecture: String) : BuildType({
+open class BuildImage(device: String, architecture: String, meta: String = device) : BuildType({
 	id("Devices_${device}_BuildImage")
 	name = "Build Image"
 	description = "Build Asteroid image for $device with latest sstate-cache"
 
 	artifactRules = """
-		+:build/tmp-glibc/deploy/images/${device}/asteroid-image-${device}.ext4
-		+:build/tmp-glibc/deploy/images/${device}/zImage-dtb-${device}.fastboot
+		+:build/tmp-glibc/deploy/images/${device}/asteroid-image-${device}*.ext4
+		+:build/tmp-glibc/deploy/images/${device}/zImage-dtb-${device}*.fastboot
 	""".trimIndent()
 	publishArtifacts = PublishMode.SUCCESSFUL
 
 	vcs {
 		CoreVCS.attachVCS(this, true)
 	}
+	params {
+		param("system.image.dev-suffix","")
+	}
 
 	steps {
 		script {
-			initScript(this, device, architecture)
+			initScript(this, device, architecture, meta)
 		}
 		script {
 			name = "Build Image"
@@ -62,14 +72,19 @@ open class BuildImage(device: String, architecture: String) : BuildType({
 	triggers {
 		vcs {
 			triggerRules = """
-				+:root=${CoreVCS.MetaSmartwatch.id};comment=^(?!\[NoBuild\]:).+:/meta-${device}/**
-				+:root=${CoreVCS.MetaSmartwatch.id};comment=^\[(?:[^\]\n]*)(${device})(?:[^\]\n]*)\][:]:/**
+				+:root=${CoreVCS.MetaSmartwatch.id}:/meta-$meta/**
 			""".trimIndent()
 
-			branchFilter = """
-				+:<default>
-				+:pull/*
+			branchFilter = "+:<default>"
+		}
+		vcs {
+			triggerRules = """
+				+:root=${CoreVCS.MetaSmartwatch.id};comment=^(?!\[NoBuild\]:).+:/meta-$meta/**
+				+:root=${CoreVCS.MetaSmartwatch.id};comment=^\[(?:[^\]\n]*)($device)(?:[^\]\n]*)\][:]:/**
 			""".trimIndent()
+
+			branchFilter = "+:pull/*"
+			buildParams.param("system.image.dev-suffix","-dev")
 		}
 	}
 
@@ -118,7 +133,7 @@ open class BuildImage(device: String, architecture: String) : BuildType({
 	}
 })
 
-open class BuildImageFromScratch(device: String, architecture: String) : BuildType({
+open class BuildImageFromScratch(device: String, architecture: String, meta: String = device) : BuildType({
 	id("Devices_${device}_BuildImageFromScratch")
 	name = "Build Image (from scratch)"
 	description = "Build Asteroid image for $device from scratch and update the sstate-cache"
@@ -130,10 +145,13 @@ open class BuildImageFromScratch(device: String, architecture: String) : BuildTy
 	vcs {
 		CoreVCS.attachVCS(this, true)
 	}
+	params {
+		param("system.image.dev-suffix","-dev")
+	}
 
 	steps {
 		script {
-			initScript(this, device, architecture, false)
+			initScript(this, device, architecture, meta, false)
 		}
 		script {
 			bitbakeBuild(this)
