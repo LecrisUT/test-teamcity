@@ -10,7 +10,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.vcs.GitVcsRoot
 
 
 object CoreVCS {
-	var Asteroid = GitVcsRoot_fallback {
+	var Asteroid: GitVcsRoot = GitVcsRoot_fallback {
 		id("AsteroidVCS")
 		name = "Asteroid"
 		gitBase = "https://github.com/"
@@ -48,7 +48,7 @@ object CoreVCS {
 		url = "https://github.com/shr-distribution/meta-smartphone"
 		branch = "refs/heads/honister"
 	}
-	var MetaAsteroid = GitVcsRoot_fallback {
+	var MetaAsteroid: GitVcsRoot = GitVcsRoot_fallback {
 		id("MetaAsteroidVCS")
 		name = "Meta Asteroid"
 		gitBase = "https://github.com/"
@@ -58,7 +58,7 @@ object CoreVCS {
 	}
 
 	// TODO: Move MetaSmartwatch outside CoreVCS
-	var MetaSmartwatch = GitVcsRoot_fallback {
+	var MetaSmartwatch: GitVcsRoot = GitVcsRoot_fallback {
 		id("MetaSmartwatchVCS")
 		name = "Meta Smatwtach"
 		gitBase = "https://github.com/"

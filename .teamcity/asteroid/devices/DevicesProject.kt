@@ -28,8 +28,9 @@ object DevicesProject : Project({
 		subProject(device)
 	// TODO: Link to root Asteroid Project for external dependence
 
-	// Attach MetaSmartwatch vcs
-	vcsRoot(CoreVCS.MetaSmartwatch)
+	// TODO: Uncomment when have common base
+//	// Attach MetaSmartwatch vcs
+//	vcsRoot(CoreVCS.MetaSmartwatch)
 
 	if (Settings.withSstate) {
 		buildType(BuildBase)

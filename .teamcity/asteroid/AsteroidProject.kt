@@ -1,6 +1,5 @@
 package asteroid
 
-import jetbrains.buildServer.configs.kotlin.v2019_2.ErrorConsumer
 import jetbrains.buildServer.configs.kotlin.v2019_2.Project
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.activeStorage
 
@@ -11,6 +10,9 @@ object AsteroidProject : Project({
 	for (vcs in CoreVCS.all())
 		if (vcs != CoreVCS.MetaSmartwatch)
 			vcsRoot(vcs)
+
+	// TODO: Remove when have common base
+	vcsRoot(CoreVCS.MetaSmartwatch)
 
 	// Attach InitWorkspace build
 	buildType(InitWorkspace)
